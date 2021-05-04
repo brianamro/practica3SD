@@ -1,0 +1,182 @@
+section#first-slide ul{
+    margin-bottom: 40px;
+}
+section#first-slide p{
+    font-size: 1.2em;
+}
+
+section#main-content {
+    background-color: rgb(51, 51, 51);
+    width: 100%;
+    position: absolute;
+    z-index: 1;
+    padding: 2% 5%;
+    box-sizing: border-box;
+    min-height: 100vh;
+}
+section#main-content > h1{
+    margin-bottom: 25px;
+    color: rgb(136, 255, 255);
+}
+section#main-content > h2{
+    margin-bottom: 25px;
+    color: rgb(227, 255, 255);
+}
+section#main-content .row-flex-container{
+    display: flex;
+    flex-direction: row;
+    box-sizing: border-box;
+    margin-bottom: 75px;
+}
+.clock{
+    background-color: rgb(24, 24, 24);
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    padding: 15px;
+    margin: 0 20px;
+    position: relative;
+    color: rgb(230, 230, 230);
+}
+.clock h3{
+    margin: 0;
+}
+.clock a.btn-float{
+    width: 25px;
+    height: 25px;
+    border-radius: 25px;
+    padding: 13px 10px 13px 15px;
+    font-size: 1.2em;
+    color: white;
+    position: absolute;
+    top: -25px;
+    z-index: 3;
+    transition: all 0.25s ease-in;
+}
+.clock a.btn-float.edit-clock{
+    left: -25px;
+    background-color: rgb(255, 75, 20);
+}
+.clock a.btn-float.send-clock{
+    left: 35px;
+    background-color: rgb(45, 213, 243);
+}
+.clock a.btn-float.decrease{
+    top: auto;
+    bottom: -25px;
+    right: 50px;
+    z-index: 5;
+    background-color: rgba(255, 255, 255, 0.01);
+}
+.clock a.btn-float.increase{
+    top: auto;
+    bottom: -25px;
+    right: 0;
+    z-index: 5;
+    background-color: rgba(255, 255, 255, 0.01);
+}
+.clock .notification{
+    text-align: center;
+    width: 50%;
+    border-radius: 25px;
+    padding: 13px 10px 13px 15px;
+    font-size: 1em;
+    color: white;
+    position: absolute;
+    bottom: -25px;
+    left: 25%;
+    z-index: 3;
+    transition: all 0.25s ease-in;
+    background-color: rgba(95, 95, 95, 0.5);
+    opacity: 0;
+}
+.clock .notification.appear{
+    animation: appears 2s;
+}
+@keyframes appears {
+    from{
+        opacity: 1;
+    }
+    to{
+        opacity: 0;
+    }
+}
+.clock a.btn-float:hover{
+    transform: scale(1.2);
+    transition: all 0.25s ease-in;
+}
+.clock .content-info{
+    display: flex;
+    flex-direction: row;
+    height: calc(100% - 50px);
+    align-items: center;
+    justify-content: center;
+}
+.clock .content-info h1{
+    font-size: 5rem;
+}
+/* Modal de edicion de Reloj */
+#modal-edit-clock{
+    position: fixed;
+    align-items: center;
+    justify-content: center;
+    z-index: 7;
+    height: 100vh;
+    width: 100vw;
+    background-color: rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(5px);
+    display: none;
+    opacity: 0;
+    transition: all 0.3s ease-in;
+    
+}
+#modal-edit-clock.show{
+    display: flex;
+    opacity: 1;
+    transition: all 0.5s ease-in;
+}
+.container-clock{
+    width: 50%;
+}
+.container-clock .clock{
+    margin: 0;
+}
+.container-clock .clock input{
+    font-family: 'Oswald', sans-serif;
+    background: transparent;
+    color:rgb(230, 230, 230);
+    font-size: 5rem;
+    width: 120px;
+    text-align: center;
+    border: none;
+}
+.container-clock .clock input:focus{
+    color:white;
+}
+.container-buttons{
+    margin-top: 25px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap:wrap;
+    width: 100%;
+}
+.container-buttons .button{
+    background-color: yellow;
+    text-align: center;
+    width: 40%;
+    display: block;
+    padding: 1em 0;
+    box-sizing: border-box;
+    border-radius: 25px;
+    border: 2px solid yellow;
+    color: white;
+}
+.button.cancel{
+    background-color: transparent;
+    border-color: rgb(255, 255, 255);
+}
+.button.accept{
+    background-color: rgb(0, 195, 114);
+    border-color: rgb(0, 195, 114);
+}

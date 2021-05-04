@@ -1,15 +1,16 @@
 {
-  "name": "ejemploMongo",
+  "name": "practica3_sd",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start:server": "electron server",
+    "start:client": "electron client"
   },
-  "keywords": [],
-  "author": "",
   "license": "ISC",
   "dependencies": {
     "mongodb": "^3.6.6"
+  },
+  "devDependencies": {
+    "electron": "^12.0.6"
   }
 }

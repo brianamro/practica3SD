@@ -1,7 +1,7 @@
 const { MongoClient } = require("mongodb");
 // Replace the uri string with your MongoDB deployment's connection string.
 const uri =
-"mongodb+srv://user_x:pass@clusterrico.vre9s.mongodb.net/bookservice?retryWrites=true&w=majority";
+"mongodb+srv://brian:pass@clusterrico.vre9s.mongodb.net/bookservice?retryWrites=true&w=majority";
 const client = new MongoClient(uri, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
