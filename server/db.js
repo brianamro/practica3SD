@@ -6,18 +6,35 @@ const client = new MongoClient(uri, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
-async function query() {
+async function getRandomBook() {
   try {
     await client.connect();
     const database = client.db('bookservice');
     const libros = database.collection('libros');
-    // Consulta del libro con ese ISBN
-    const query = { ISBN: "9786070742255" };
-    const libro = await libros.findOne(query);
-    console.log(libro);
+    //Obtenemos todos los ISBN de la base de datos y los guardamos en un arreglo
+    const projection = {_id: 0, ISBN: 1}
+    const cursor1 = libros.find().project(projection);
+    const allISBN = await cursor1.toArray();
+    //Seleccionamos uno al azar 
+    const randomISBN = allISBN[ Math.floor( Math.random()*allISBN.length )];
+
+    //Obtenemos la información completa del libro random
+    const cursor2 = libros.find(randomISBN);
+    const randomBook = await cursor2.toArray();
+
+    return randomBook[0];
+
   } finally {
     // Ensures that the client will close when you finish/error
     await client.close();
   }
 }
-query().catch(console.dir);
+
+let book = (async function(){
+  let randBook = await getRandomBook();
+  //console.log(randBook);  
+  bookx = randBook;
+})();
+
+
+
