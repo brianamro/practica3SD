@@ -1,12 +1,16 @@
 const net = require('net');
+const Swal = require('sweetalert2');
 
 import { updateClockDom } from '../common/utils.js';
 
 const SERVER_PORT = 5500;
 const SERVER_IP = "localhost";
 
+const bookInfoContainer = $('#book-container');
+
 var clock;
 var socket;
+
 
 export default function main() {
     initClock();
@@ -60,12 +64,19 @@ function initSocket() {
     socket.on('end', () => {
         // TODO: Preguntar al usuario si quisiera conectarse de nuevo o salir
         console.log("disconnected from server");
+        bookInfoContainer.removeClass("showing-info");
+        //Alerta
+        Swal.fire({
+            title: 'Sesion finalizada',
+            text: 'La sesion ha terminado',
+            icon: 'info',
+            confirmButtonText: 'Aceptar'
+        });
     });
 }
 
 // Despliegue de información de libro
 function showBook({value}) {
-    const bookInfoContainer = $('#book-container');
     const infoBook = bookInfoContainer.find(".information");
     const {ISBN, autor, editorial, nombre, precio} = value;
     //Rellenar informacion

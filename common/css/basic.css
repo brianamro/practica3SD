@@ -247,3 +247,7 @@ input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
+/* Sweet Alert */
+.swal2-content{
+    font-family: 'Montserrat', sans-serif!important;
+}

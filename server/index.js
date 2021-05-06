@@ -1,4 +1,5 @@
 const net = require('net');
+const Swal = require('sweetalert2');
 
 import { updateClockDom } from '../common/utils.js';
 import { getBooks, getRandomBook, resetBooks, areAvailableBooks, logRequest, getAvailableBooks } from "./db.js";
@@ -21,6 +22,7 @@ function initClock() {
     mainClock.postMessage({
         name: "Reloj Maestro"
     });
+    
 }
 
 const lastBookContainer = $('#last-book');
@@ -30,6 +32,13 @@ $('.button#btn-reset-all').on("click", e =>{
     resetSession();
     showAllAvailableBooks();
     lastBookContainer.slideUp();
+    //Alerta
+    Swal.fire({
+        title: 'Reinicio',
+        text: 'Se ha reiniciado la sesion',
+        icon: 'info',
+        confirmButtonText: 'Aceptar'
+    });
 })
 async function showAllAvailableBooks(){
     getAvailableBooks().then((books)=>{
