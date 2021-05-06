@@ -38,6 +38,26 @@ button:focus{
 p{
     margin: 0;
 }
+p.center{
+    text-align: center;
+}
+p.rich{
+    font-weight: bold;
+}
+p.rich span{
+    font-weight: normal;
+}
+.col{
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+}
+.col-6{
+    flex: 1;
+}
+.col-9{
+    flex: 2;
+}
 /*----------------------------------------------------
     SCROLL BAR
 -----------------------------------------------------*/
