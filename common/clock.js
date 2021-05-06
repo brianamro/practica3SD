@@ -1,3 +1,5 @@
+import {asDoubleDigit} from '../common/utils';
+
 const getRandom = maxNum => (Math.floor(Math.random() * maxNum));
 
 export default class Clock {
@@ -7,6 +9,9 @@ export default class Clock {
         mins =  (mins ?? now. getMinutes()) % 60;
         secs = (secs ?? now.getSeconds()) % 60;
         this._seconds = hours * 60 * 60 + mins * 60 + secs;
+    }
+    get rawTime() {
+        return this._seconds;
     }
     get time() {
         let hours = Math.floor(this._seconds / (60 * 60));
@@ -26,5 +31,8 @@ export default class Clock {
     }
     advance() {
         this._seconds = (this._seconds + 1) % (24 * 60 * 60);
+    }
+    static toStringTime(time) {
+        return `${asDoubleDigit(time?.hours)}:${asDoubleDigit(time?.minutes)}:${asDoubleDigit(time?.seconds)}`;
     }
 }
