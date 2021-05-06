@@ -218,21 +218,21 @@ section#main-content p{
     border-color: rgb(255, 255, 255);
 }
 /* Contedor de informacion del libro */
-#book{
+#book-container{
     height: 30vh;
 }
-#book img{
+#book-container img{
     width: 70%;
 }
-#book .information{
+#book-container .information{
     display: none;
 }
 .container-buttons{
     padding: 0 20vw;
 }
-#book.showing-info{
+#book-container.showing-info{
     height: 50vh;
 }
-#book.showing-info .container-buttons{
+#book-container.showing-info .container-buttons{
     padding: 0;
 }
