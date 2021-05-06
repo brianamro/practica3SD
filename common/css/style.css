@@ -218,13 +218,21 @@ section#main-content p{
     border-color: rgb(255, 255, 255);
 }
 /* Contedor de informacion del libro */
-.client #book{
-    height: 50vh;
+#book{
+    height: 30vh;
 }
 #book img{
     width: 70%;
 }
 #book .information{
-    flex: 1;
-    justify-content: space-evenly;
+    display: none;
+}
+.container-buttons{
+    padding: 0 20vw;
+}
+#book.showing-info{
+    height: 50vh;
+}
+#book.showing-info .container-buttons{
+    padding: 0;
 }
