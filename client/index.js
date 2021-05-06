@@ -48,8 +48,7 @@ function initSocket() {
     socket.on('data', data => {
         let msg = JSON.parse(data.toString());
         if (msg?.type === 'success') {
-            let book = msg.info?.book;
-            console.log(book);
+            const book = msg.info?.book;
             showBook(book);
         } else if (msg?.type === 'enableReset') {
             enableReset();
@@ -65,8 +64,20 @@ function initSocket() {
 }
 
 // TODO: implementar despliegue de información de libro
-function showBook(book) {
-
+function showBook({value}) {
+    const bookInfoContainer = $('#book-container');
+    const infoBook = bookInfoContainer.find(".information");
+    const {ISBN, autor, editorial, nombre, precio} = value;
+    //Rellenar informacion
+    infoBook.find("p#nombre span").html(nombre);
+    infoBook.find("p#autor span").html(autor);
+    infoBook.find("p#editorial span").html(editorial);
+    infoBook.find("p#precio span").html(precio);
+    infoBook.find("p#ISBN span").html(ISBN);
+    //Mostrar Contenedor
+    bookInfoContainer.addClass("showing-info");
+    //Desactivar boton de pedir libro
+    bookInfoContainer.find("#btn-request-book").addClass("disabled");
 }
 
 function reset() {
