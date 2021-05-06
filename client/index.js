@@ -20,12 +20,6 @@ function bindButtons() {
         requestBook();
         document.getElementById('btn-request-book').removeEventListener('click', requestBookHdl);
     });
-
-    // HACK: Sólo usado para pruebas, eliminar cuando se termine la implementación
-    document.getElementById('btn-reset').addEventListener('click', function resetSessions(event) {
-        event.preventDefault();
-        reset();
-    });
 }
 
 function initClock() {
@@ -83,7 +77,7 @@ function showBook({ value }) {
 function reset() {
     let request = {
         type: "reset"
-    }
+    };
     socket.write(JSON.stringify(request));
 }
 
@@ -94,7 +88,6 @@ function requestBook() {
     socket.write(JSON.stringify(request));
 }
 
-// TODO: Implementar habilitación de botón para reiniciar el préstamo de libros
 function enableReset() {
     document.getElementById('btn-reset').addEventListener('click', function resetSessions(event) {
         event.preventDefault();
