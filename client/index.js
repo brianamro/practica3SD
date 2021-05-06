@@ -64,10 +64,10 @@ function initSocket() {
 }
 
 // Despliegue de información de libro
-function showBook({value}) {
+function showBook({ value }) {
     const bookInfoContainer = $('#book-container');
     const infoBook = bookInfoContainer.find(".information");
-    const {ISBN, autor, editorial, nombre, precio} = value;
+    const { ISBN, autor, editorial, nombre, precio } = value;
     //Rellenar informacion
     infoBook.find("p#nombre span").html(nombre);
     infoBook.find("p#autor span").html(autor);

@@ -84,7 +84,7 @@ async function getAvailableBooks() {
     try {
         await client.connect();
         let books = client.db('bookservice').collection('libros');
-        return await books.find({prestado: false}).toArray();
+        return await books.find({ prestado: false }).toArray();
     } catch (e) {
         return e;
     } finally {

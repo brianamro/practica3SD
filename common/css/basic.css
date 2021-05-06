@@ -1,4 +1,4 @@
-h1,h2{
+h1, h2 {
     font-family: 'Oswald', sans-serif;
     text-align: center;
     text-transform: uppercase;
@@ -7,80 +7,100 @@ h1,h2{
     font-size: 1.8rem;
     margin: 0;
 }
-h2{
+
+h2 {
     font-size: 1.5rem;
     letter-spacing: 3px;
 }
-h3,h4,h5{
+
+h3, h4, h5 {
     font-family: 'Cabin', sans-serif;
     text-align: center;
 }
-h4{
+
+h4 {
     margin: 0;
-    
     font-size: 1.2em;
 }
-p,a, table, input, label{
+
+p, a, table, input, label {
     font-family: 'Montserrat', sans-serif;
 }
-a{
+
+a {
     color: black;
     text-decoration: none;
 }
-ul, li{
+
+ul, li {
     list-style: none;
     padding: 0;
 }
-table{
+
+table {
     border: none;
 }
-button.btn{
+
+button.btn {
     appearance: none;
     background-color: #fff;
     color: #000;
     border: none;
 }
-button:focus{
+
+button:focus {
     outline: none;
 }
-p{
+
+p {
     margin: 0;
 }
-p.center{
+
+p.center {
     text-align: center;
 }
-p.rich{
+
+p.rich {
     font-weight: bold;
 }
-p.rich span{
+
+p.rich span {
     font-weight: normal;
 }
-.col{
+
+.col {
     text-align: center;
     align-items: center;
     justify-content: center;
 }
-.col-6{
+
+.col-6 {
     flex: 1;
 }
-.col-9{
+
+.col-9 {
     flex: 2;
 }
+
 /*----------------------------------------------------
     SCROLL BAR
 -----------------------------------------------------*/
+
 ::-webkit-scrollbar {
     width: 10px
 }
+
 ::-webkit-scrollbar-track {
-    -webkit-box-shadow: inset 0 0 6px rgba(255, 255, 255, 0.25); 
+    -webkit-box-shadow: inset 0 0 6px rgba(255, 255, 255, 0.25);
     border-radius: 5px
 }
+
 ::-webkit-scrollbar-thumb {
     background: rgba(255, 255, 255, 0.8);
     border-radius: 10px;
 }
-body{
+
+body {
     width: 100vw;
     height: 100vh;
     margin: 0;
@@ -88,7 +108,9 @@ body{
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
 }
+
 /* ELementos para la trasicion */
+
 body:before, body:after {
     content: "";
     height: 50vh;
@@ -98,25 +120,30 @@ body:before, body:after {
     background: #1c2020;
     z-index: 1;
 }
+
 body:before {
     top: 0;
     transform: translateY(-100%);
 }
+
 body:after {
     bottom: 0;
     transform: translateY(100%);
 }
+
 /* Animacion del loader */
+
 @keyframes delay {
     0%, 40%, 100% {
         transform: scaleY(0.05);
         -webkit-transform: scaleY(0.05);
-   }
+    }
     20% {
         transform: scaleY(1);
         -webkit-transform: scaleY(1);
-   }
+    }
 }
+
 .loader {
     margin: 0 auto;
     width: 60px;
@@ -130,7 +157,8 @@ body:after {
     z-index: 0;
     opacity: 0;
 }
-.loader > div {
+
+.loader>div {
     height: 100%;
     width: 8px;
     display: inline-block;
@@ -138,29 +166,36 @@ body:after {
     margin-left: 2px;
     animation: delay 0.8s infinite ease-in-out;
 }
+
 .loader .bar1 {
     background-color: #754fa0;
 }
+
 .loader .bar2 {
     background-color: #09b7bf;
     animation-delay: -0.7s;
 }
+
 .loader .bar3 {
     background-color: #90d36b;
     animation-delay: -0.6s;
 }
+
 .loader .bar4 {
     background-color: #f2d40d;
     animation-delay: -0.5s;
 }
+
 .loader .bar5 {
     background-color: #fcb12b;
     animation-delay: -0.4s;
 }
+
 .loader .bar6 {
     background-color: #ed1b72;
     animation-delay: -0.3s;
 }
+
 section#first-slide {
     height: 100vh;
     width: 100%;
@@ -168,6 +203,7 @@ section#first-slide {
     position: fixed;
     z-index: 0;
 }
+
 section#first-slide .content {
     position: relative;
     height: 100vh;
@@ -175,24 +211,29 @@ section#first-slide .content {
     display: table;
     width: 100%;
 }
-section#first-slide .content > div {
+
+section#first-slide .content>div {
     display: table-cell;
     vertical-align: middle;
     height: 100%;
     overflow: hidden;
     overflow-y: auto;
 }
-section#first-slide .content > div > h1{
+
+section#first-slide .content>div>h1 {
     font-size: 6.5em;
     margin-bottom: 20px;
 }
+
 /* Boton de Inicio de Transicion */
+
 .start-button {
     position: relative;
     margin: auto;
     padding: 19px 22px;
     transition: all 0.2s ease;
 }
+
 .start-button:before {
     content: "";
     position: absolute;
@@ -205,9 +246,11 @@ section#first-slide .content > div > h1{
     height: 56px;
     transition: all 0.3s ease;
 }
-.start-button:hover{
+
+.start-button:hover {
     color: whitesmoke;
 }
+
 .start-button span {
     position: relative;
     font-size: 16px;
@@ -217,6 +260,7 @@ section#first-slide .content > div > h1{
     text-transform: uppercase;
     vertical-align: middle;
 }
+
 .start-button svg {
     position: relative;
     top: 0;
@@ -229,21 +273,25 @@ section#first-slide .content > div > h1{
     transform: translateX(-5px);
     transition: all 0.3s ease;
 }
-.start-button:hover svg{
+
+.start-button:hover svg {
     stroke: whitesmoke;
 }
+
 .start-button:hover:before {
     width: 100%;
     background: rgba(28, 32, 32, 0.75);
 }
+
 .start-button:hover svg {
     transform: translateX(0);
 }
+
 .start-button:active {
     transform: scale(0.96);
 }
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
+
+input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
 }

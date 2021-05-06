@@ -23,28 +23,28 @@ function initClock() {
     });
 }
 
-async function showAllAvailableBooks(){
-    getAvailableBooks().then((books)=>{
+async function showAllAvailableBooks() {
+    getAvailableBooks().then((books) => {
         const allBooksContainer = $('.all-books');
         allBooksContainer.html("");
         books.forEach(book => {
-            const {ISBN, autor, nombre} = book;
-            let newBook = 
-            `<div class="book-title">
+            const { ISBN, autor, nombre } = book;
+            let newBook =
+                `<div class="book-title">
                  <h4>${nombre}</h4>
                  <p>${autor}</p>
                  <p>${ISBN}</p>
              </div>`
             allBooksContainer.append(newBook);
         });
-    })
+    });
 }
 
 // Funcion que llena la interfaz con los datos de un libro
-function fillInfoBook({value}){
+function fillInfoBook({ value }) {
     const lastBookContainer = $('#last-book');
     console.log(value);
-    const {nombre, autor, editorial, precio, ISBN, imagen} = value;
+    const { nombre, autor, editorial, precio, ISBN, imagen } = value;
     lastBookContainer.find("p#nombre span").html(nombre);
     lastBookContainer.find("p#autor span").html(autor);
     lastBookContainer.find("p#editorial span").html(editorial);
@@ -82,7 +82,7 @@ function initServer() {
                     c.write(JSON.stringify(resp));
 
                     logRequest(c.address().address, book.ISBN).catch(console.error);
-                    
+
                     areAvailableBooks().then(res => {
                         if (!res) {
                             enableClientReset();
