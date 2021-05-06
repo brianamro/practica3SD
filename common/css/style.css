@@ -14,11 +14,11 @@ section#main-content {
     box-sizing: border-box;
     min-height: 100vh;
 }
-section#main-content > h1{
+section#main-content h1{
     margin-bottom: 25px;
     color: rgb(136, 255, 255);
 }
-section#main-content > h2{
+section#main-content h2{
     margin-bottom: 25px;
     color: rgb(227, 255, 255);
 }

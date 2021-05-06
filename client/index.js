@@ -63,7 +63,7 @@ function initSocket() {
     });
 }
 
-// TODO: implementar despliegue de información de libro
+// Despliegue de información de libro
 function showBook({value}) {
     const bookInfoContainer = $('#book-container');
     const infoBook = bookInfoContainer.find(".information");
