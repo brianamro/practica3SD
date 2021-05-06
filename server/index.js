@@ -107,14 +107,14 @@ function enableClientReset() {
             let msg = JSON.parse(data.toString());
             console.log(msg);
             if (msg?.type === "reset") {
-                resetSession().catch(console.error);
+                resetSession();
             }
         });
     });
 }
 
-async function resetSession() {
-    await resetBooks();
+function resetSession() {
+    resetBooks().catch(console.error);
     connections.forEach(conn => conn.end());
     connections = [];
 }

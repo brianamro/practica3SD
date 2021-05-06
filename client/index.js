@@ -21,6 +21,7 @@ function bindButtons() {
         document.getElementById('btn-request-book').removeEventListener('click', requestBookHdl);
     });
 
+    // HACK: Sólo usado para pruebas, eliminar cuando se termine la implementación
     document.getElementById('btn-reset').addEventListener('click', function resetSessions(event) {
         event.preventDefault();
         reset();
@@ -58,6 +59,7 @@ function initSocket() {
     });
 
     socket.on('end', () => {
+        // TODO: Preguntar al usuario si quisiera conectarse de nuevo o salir
         console.log("disconnected from server");
     });
 }
@@ -83,5 +85,8 @@ function requestBook() {
 
 // TODO: Implementar habilitación de botón para reiniciar el préstamo de libros
 function enableReset() {
-
+    document.getElementById('btn-reset').addEventListener('click', function resetSessions(event) {
+        event.preventDefault();
+        reset();
+    });
 }
