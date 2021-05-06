@@ -1,12 +1,15 @@
 const { MongoClient } = require("mongodb");
-// Replace the uri string with your MongoDB deployment's connection string.
+
 const uri =
 "mongodb+srv://brian:pass@clusterrico.vre9s.mongodb.net/bookservice?retryWrites=true&w=majority";
-const client = new MongoClient(uri, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+
+const config = {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+};
+
 async function getRandomBook() {
+    let client = new MongoClient(uri, config);
   try {
     await client.connect();
     const database = client.db('bookservice');
@@ -32,9 +35,59 @@ async function getRandomBook() {
 
 let book = (async function(){
   let randBook = await getRandomBook();
-  //console.log(randBook);  
+  //console.log(randBook);
   bookx = randBook;
 })();
 
+async function getBooks() {
+    let client = new MongoClient(uri, config);
+
+    try {
+        await client.connect();
+        let books = client.db('bookservice').collection('libros');
+        return await books.find().toArray();
+    } catch (e) {
+        return e;
+    } finally {
+        // Ensures that the client will close when you finish/error
+        await client.close();
+    }
+}
+
+async function resetBooks() {
+    let client = new MongoClient(uri, config);
+    try {
+        await client.connect();
+        let books = client.db('bookservice').collection('libros');
+        let result = await books.updateMany(
+            {},
+            { $set: { "prestado": false } }
+        );
+        console.log(result);
+    } catch (e) {
+        return e;
+    } finally {
+        // Ensures that the client will close when you finish/error
+        await client.close();
+    }
+}
 
 
+// TODO: realizar logging de peticiones
+async function logRequest(ip, time, isbn) {
+    let client = new MongoClient(uri, config);
+    try {
+        await client.connect();
+        let logs = client.db('bookservice').collection('log');
+        console.log();
+        // await books.updateMany(
+        //     {},
+        //     { $set: { "prestado": false } }
+        // );
+    } catch (e) {
+        return e;
+    } finally {
+        // Ensures that the client will close when you finish/error
+        await client.close();
+    }
+}
