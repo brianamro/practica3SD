@@ -1,5 +1,5 @@
 # Sistemas Distribuidos Practica 3
-### Escuela Superior de Computo - IPN, Mexico
+#### Escuela Superior de Computo - IPN, Mexico
 
 ## Como usarlo
 
