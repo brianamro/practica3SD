@@ -24,12 +24,6 @@ function bindButtons() {
         requestBook();
         document.getElementById('btn-request-book').removeEventListener('click', requestBookHdl);
     });
-
-    // HACK: Sólo usado para pruebas, eliminar cuando se termine la implementación
-    document.getElementById('btn-reset').addEventListener('click', function resetSessions(event) {
-        event.preventDefault();
-        reset();
-    });
 }
 
 function initClock() {
@@ -78,7 +72,7 @@ function initSocket() {
 // Despliegue de información de libro
 function showBook({value}) {
     const infoBook = bookInfoContainer.find(".information");
-    const {ISBN, autor, editorial, nombre, precio} = value;
+    const { ISBN, autor, editorial, nombre, precio } = value;
     //Rellenar informacion
     infoBook.find("p#nombre span").html(nombre);
     infoBook.find("p#autor span").html(autor);
@@ -94,7 +88,7 @@ function showBook({value}) {
 function reset() {
     let request = {
         type: "reset"
-    }
+    };
     socket.write(JSON.stringify(request));
 }
 
@@ -105,7 +99,6 @@ function requestBook() {
     socket.write(JSON.stringify(request));
 }
 
-// TODO: Implementar habilitación de botón para reiniciar el préstamo de libros
 function enableReset() {
     document.getElementById('btn-reset').addEventListener('click', function resetSessions(event) {
         event.preventDefault();

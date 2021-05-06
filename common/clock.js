@@ -4,7 +4,7 @@ export default class Clock {
     constructor(hours, mins, secs) {
         let now = new Date();
         hours = (hours ?? now.getHours()) % 24;
-        mins =  (mins ?? now. getMinutes()) % 60;
+        mins = (mins ?? now.getMinutes()) % 60;
         secs = (secs ?? now.getSeconds()) % 60;
         this._seconds = hours * 60 * 60 + mins * 60 + secs;
     }

@@ -59,7 +59,7 @@ onmessage = function initState(e) {
                 clearInterval(mlHandler);
                 internal_clock.time = e.data.time;
                 mlHandler = mainLoop(velocity);
-            }else if (e.data.action === 'setTimeNoStart') {
+            } else if (e.data.action === 'setTimeNoStart') {
                 clearInterval(mlHandler);
                 internal_clock.time = e.data.time;
                 postMessage(internal_clock.time);
@@ -72,11 +72,11 @@ onmessage = function initState(e) {
                 internal_clock.time = e.data.time;
                 velocity = e.data.velocity;
                 mlHandler = mainLoop(velocity);
-            } else if (e.data.action === 'stop'){
+            } else if (e.data.action === 'stop') {
                 clearInterval(mlHandler);
             } else if ((e.data.action === 'send') && enableSocket) {
                 let client = dgram.createSocket('udp4');
-                console.log(`Sending data to ${ip}:${port}` );
+                console.log(`Sending data to ${ip}:${port}`);
                 let data = {
                     time: internal_clock.time,
                     name: name,

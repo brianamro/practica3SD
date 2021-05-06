@@ -1,22 +1,25 @@
-.all-books{
-    display: flex;    
+.all-books {
+    display: flex;
     overflow-x: auto;
     margin: 0 45px;
-    padding-bottom: 15px ;
+    padding-bottom: 15px;
 }
-.book-title{
+
+.book-title {
     background-color: rgb(255, 34, 63);
     width: 100%;
     margin-right: 15px;
     padding: 10px;
     border-radius: 5px;
 }
-.book-title > h4{
+
+.book-title>h4 {
     margin-bottom: 8px;
     color: white;
     text-align: left;
 }
-.book-title > p{
+
+.book-title>p {
     margin-bottom: 5px;
 }
 #last-book{
