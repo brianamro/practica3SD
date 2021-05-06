@@ -23,6 +23,14 @@ function initClock() {
     });
 }
 
+const lastBookContainer = $('#last-book');
+// Boton para reiniciar el servidor
+$('.button#btn-reset-all').on("click", e =>{
+    e.preventDefault();
+    resetSession();
+    showAllAvailableBooks();
+    lastBookContainer.slideUp();
+})
 async function showAllAvailableBooks(){
     getAvailableBooks().then((books)=>{
         const allBooksContainer = $('.all-books');
@@ -42,7 +50,7 @@ async function showAllAvailableBooks(){
 
 // Funcion que llena la interfaz con los datos de un libro
 function fillInfoBook({value}){
-    const lastBookContainer = $('#last-book');
+    
     console.log(value);
     const {nombre, autor, editorial, precio, ISBN, imagen} = value;
     lastBookContainer.find("p#nombre span").html(nombre);
