@@ -15,7 +15,8 @@ const config = {
 var socket;
 
 (function main() {
-    initSocket();
+    // initSocket();
+    resetBooks();
 })();
 
 function initSocket() {
