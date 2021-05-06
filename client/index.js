@@ -56,16 +56,26 @@ function initSocket() {
     });
 
     socket.on('end', () => {
-        // TODO: Preguntar al usuario si quisiera conectarse de nuevo o salir
         console.log("disconnected from server");
         bookInfoContainer.removeClass("showing-info");
-        //Alerta
+        bookInfoContainer.find("#btn-request-book").removeClass("disabled");
+
+        //Alerta de cierree de esision
         Swal.fire({
-            title: 'Sesion finalizada',
-            text: 'La sesion ha terminado',
-            icon: 'info',
-            confirmButtonText: 'Aceptar'
-        });
+            title: 'Sesion Finalizada',
+            text: '¿Te gustaria continuar?',
+            showDenyButton: true,
+            confirmButtonText: 'Si, continuar',
+            denyButtonText: 'No, salir',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                //Alerta aceptada, continuar con la sesion
+                socket = net.connect({
+                    port: SERVER_PORT,
+                    host: SERVER_IP,
+                },()=> console.log("reconectado"));
+            } 
+        })
     });
 }
 
