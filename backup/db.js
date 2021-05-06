@@ -1,6 +1,5 @@
 const { MongoClient } = require("mongodb");
 
-// TODO: conseguir uri de la segunda base de datos
 const uri =
     "mongodb+srv://brian:pass@clusterrico.vre9s.mongodb.net/bookserviceBackup?retryWrites=true&w=majority";
 
