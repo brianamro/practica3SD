@@ -78,6 +78,21 @@ async function getBooks() {
     }
 }
 
+async function getAvailableBooks() {
+    let client = new MongoClient(uri, config);
+
+    try {
+        await client.connect();
+        let books = client.db('bookservice').collection('libros');
+        return (await books.find({prestado: false}));
+    } catch (e) {
+        return e;
+    } finally {
+        // Ensures that the client will close when you finish/error
+        await client.close();
+    }
+}
+
 async function areAvailableBooks() {
     let client = new MongoClient(uri, config);
 
@@ -160,5 +175,6 @@ export {
     getRandomBook,
     logRequest,
     resetBooks,
-    areAvailableBooks
+    areAvailableBooks,
+    getAvailableBooks
 }
