@@ -23,24 +23,7 @@ function initClock() {
     });
 }
 
-function fillInfoBook({value}){
-    const lastBookContainer = $('#last-book');
-    console.log(value);
-    const {nombre, autor, editorial, precio, ISBN, imagen} = value;
-    lastBookContainer.find("p#nombre span").html(nombre);
-    lastBookContainer.find("p#autor span").html(autor);
-    lastBookContainer.find("p#editorial span").html(editorial);
-    lastBookContainer.find("p#precio span").html(precio);
-    lastBookContainer.find("p#ISBN span").html(ISBN);
-    lastBookContainer.find("img#book-cover").attr("src", `..${imagen}`);
-    //Mostrar contenido
-    lastBookContainer.slideDown(250);
-}
-
-function initServer() {
-    connections = [];
-
-    //Llenar contenedor de libros disponibles
+async function showAllAvailableBooks(){
     getAvailableBooks().then((books)=>{
         const allBooksContainer = $('.all-books');
         allBooksContainer.html("");
@@ -55,6 +38,30 @@ function initServer() {
             allBooksContainer.append(newBook);
         });
     })
+}
+
+// Funcion que llena la interfaz con los datos de un libro
+function fillInfoBook({value}){
+    const lastBookContainer = $('#last-book');
+    console.log(value);
+    const {nombre, autor, editorial, precio, ISBN, imagen} = value;
+    lastBookContainer.find("p#nombre span").html(nombre);
+    lastBookContainer.find("p#autor span").html(autor);
+    lastBookContainer.find("p#editorial span").html(editorial);
+    lastBookContainer.find("p#precio span").html(precio);
+    lastBookContainer.find("p#ISBN span").html(ISBN);
+    lastBookContainer.find("img#book-cover").attr("src", `..${imagen}`);
+    //Mostrar contenido
+    lastBookContainer.slideDown(250);
+    //Actualizar los libros a prestar
+    showAllAvailableBooks();
+}
+
+function initServer() {
+    connections = [];
+
+    //Llenar contenedor de libros disponibles
+    showAllAvailableBooks();
 
     server = net.createServer((c) => {
         // 'connection' listener.
