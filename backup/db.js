@@ -2,7 +2,7 @@ const { MongoClient } = require("mongodb");
 
 // TODO: conseguir uri de la segunda base de datos
 const uri =
-    "mongodb+srv://brian:pass@clusterrico.vre9s.mongodb.net/bookservice?retryWrites=true&w=majority";
+    "mongodb+srv://brian:pass@clusterrico.vre9s.mongodb.net/bookserviceBackup?retryWrites=true&w=majority";
 
 const config = {
     useNewUrlParser: true,
@@ -13,7 +13,7 @@ async function setBorrowedBook(bookID) {
     let client = new MongoClient(uri, config);
     try {
         await client.connect();
-        let libros = client.db('bookservice').collection('libros');
+        let libros = client.db('bookserviceBackup').collection('libros');
         return await libros.updateOne(
             { _id: bookID },
             { $set: { prestado: true } }
@@ -28,7 +28,7 @@ async function resetBooks() {
     let client = new MongoClient(uri, config);
     try {
         await client.connect();
-        let books = client.db('bookservice').collection('libros');
+        let books = client.db('bookserviceBackup').collection('libros');
         return await books.updateMany(
             {},
             { $set: { "prestado": false } }
@@ -45,7 +45,7 @@ async function logRequest(log) {
     let client = new MongoClient(uri, config);
     try {
         await client.connect();
-        let logs = client.db('bookservice').collection('log');
+        let logs = client.db('bookserviceBackup').collection('log');
         return await logs.insertOne(log);
     } catch (e) {
         return e;
@@ -59,7 +59,7 @@ async function resetLogin() {
     let client = new MongoClient(uri, config);
     try {
         await client.connect();
-        let logs = client.db('bookservice').collection('log');
+        let logs = client.db('bookserviceBackup').collection('log');
 
         let resp = {
             type: "resetLogin",
