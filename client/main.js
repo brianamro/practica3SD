@@ -6,7 +6,7 @@ function createWindow() {
     // Create the browser window.
     const mainWindow = new BrowserWindow({
         width: 900,
-        height: 750,
+        height: 600,
         webPreferences: {
             preload: path.join(__dirname, 'preload.js'),
             nodeIntegrationInWorker: true,
@@ -15,7 +15,8 @@ function createWindow() {
         }
     })
 
-    mainWindow.loadFile('index.html')
+    mainWindow.loadFile('index.html');
+    mainWindow.setMenuBarVisibility(false);
 
     // Open the DevTools.
     // mainWindow.webContents.openDevTools()

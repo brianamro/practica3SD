@@ -81,6 +81,13 @@ function initSocket() {
 
 // Despliegue de información de libro
 function showBook({value}) {
+    //Alerta
+    Swal.fire({
+        title: 'Solicitud aceptada',
+        text: 'El prestamo ha sido autorizado',
+        icon: 'info',
+        confirmButtonText: 'Aceptar'
+    });
     const infoBook = bookInfoContainer.find(".information");
     const { ISBN, autor, editorial, nombre, precio } = value;
     //Rellenar informacion

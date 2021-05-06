@@ -59,8 +59,14 @@ async function showAllAvailableBooks(){
 
 // Funcion que llena la interfaz con los datos de un libro
 function fillInfoBook({value}){
-    
-    console.log(value);
+    //Alerta
+    Swal.fire({
+        title: 'Solcitud entrante',
+        text: 'Un cliente ha solicitado un libro',
+        icon: 'info',
+        confirmButtonText: 'Aceptar'
+    });
+    //Adquirir datos
     const { nombre, autor, editorial, precio, ISBN, imagen } = value;
     lastBookContainer.find("p#nombre span").html(nombre);
     lastBookContainer.find("p#autor span").html(autor);
