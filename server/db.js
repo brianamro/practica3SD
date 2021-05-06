@@ -1,7 +1,7 @@
 const { MongoClient } = require("mongodb");
 
 const uri =
-"mongodb+srv://brian:pass@clusterrico.vre9s.mongodb.net/bookservice?retryWrites=true&w=majority";
+    "mongodb+srv://brian:pass@clusterrico.vre9s.mongodb.net/bookservice?retryWrites=true&w=majority";
 
 const config = {
     useNewUrlParser: true,
@@ -16,22 +16,22 @@ async function getRandomBook() {
 
     //Obtenemos todos los ISBN de la base de datos y los guardamos en un arreglo
     const allISBN = await getBooks();
-    //Seleccionamos uno al azar 
+    //Seleccionamos uno al azar
     const randomISBN = allISBN[ Math.floor( Math.random()*allISBN.length )];
     //Obtenemos la información completa del libro random
     const randomBook = await libros.find(randomISBN).toArray();
 
     const result = await libros.updateOne(
-      { ISBN: randomBook[0].ISBN }, 
-      { $set: { "prestado": true } } 
+      { ISBN: randomBook[0].ISBN },
+      { $set: { "prestado": true } }
     );
 
-    return randomBook[0];
+        return randomBook[0];
 
-  } finally {
-    // Ensures that the client will close when you finish/error
-    await client.close();
-  }
+    } finally {
+        // Ensures that the client will close when you finish/error
+        await client.close();
+    }
 }
 
 
@@ -70,8 +70,6 @@ async function resetBooks() {
     }
 }
 
-
-// TODO: realizar logging de peticiones
 async function logRequest(ip, isbn) {
     let client = new MongoClient(uri, config);
     try {

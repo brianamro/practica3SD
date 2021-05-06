@@ -25,11 +25,12 @@ server.on('error', (err) => {
     }
 });
 
-server.listen(8124, () => {
+server.listen(5500, () => {
     console.log('server bound');
 });
 
-function resetSession(){
+async function resetSession(){
+    await resetBooks();
     connections.forEach(conn => {
         conn.close();
     });
