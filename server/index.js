@@ -1,7 +1,7 @@
 const net = require('net');
 
 import { updateClockDom } from '../common/utils.js';
-import { getBooks, getRandomBook, resetBooks, areAvailableBooks, logRequest } from "./db.js";
+import { getBooks, getRandomBook, resetBooks, areAvailableBooks, logRequest, getAvailableBooks } from "./db.js";
 
 var mainClock;
 var connections;
@@ -23,8 +23,29 @@ function initClock() {
     });
 }
 
+function fillInfoBook({value}){
+    console.log(value);
+}
+
 function initServer() {
     connections = [];
+
+    //Llenar contenedor de libros disponibles
+    getAvailableBooks().then((books)=>{
+        const allBooksContainer = $('.all-books');
+        allBooksContainer.html("");
+        books.forEach(book => {
+            const {ISBN, autor, nombre} = book;
+            let newBook = 
+            `<div class="book-title">
+                 <h4>${nombre}</h4>
+                 <p>${autor}</p>
+                 <p>${ISBN}</p>
+             </div>`
+            allBooksContainer.append(newBook);
+        });
+    })
+
     server = net.createServer((c) => {
         // 'connection' listener.
         console.log(`${c.address().address} connected`);
@@ -44,12 +65,13 @@ function initServer() {
                     c.write(JSON.stringify(resp));
 
                     logRequest(c.address().address, book.ISBN).catch(console.error);
-
+                    
                     areAvailableBooks().then(res => {
                         if (!res) {
                             enableClientReset();
                         }
                     }).catch(console.error);
+                    fillInfoBook(book);
                 }).catch(err => {
                     let resp = {
                         type: "error",
