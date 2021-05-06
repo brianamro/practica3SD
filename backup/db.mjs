@@ -1,4 +1,5 @@
-const { MongoClient } = require("mongodb");
+import mongodb from "mongodb";
+const { MongoClient } = mongodb;
 
 const uri =
     "mongodb+srv://brian:pass@clusterrico.vre9s.mongodb.net/bookserviceBackup?retryWrites=true&w=majority";
@@ -59,11 +60,6 @@ async function resetLogin() {
     try {
         await client.connect();
         let logs = client.db('bookserviceBackup').collection('log');
-
-        let resp = {
-            type: "resetLogin",
-        }
-        socket.write(JSON.stringify(resp));
 
         return await logs.deleteMany({});
     } catch (e) {

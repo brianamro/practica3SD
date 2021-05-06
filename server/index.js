@@ -58,10 +58,10 @@ async function showAllAvailableBooks(){
 }
 
 // Funcion que llena la interfaz con los datos de un libro
-function fillInfoBook({value}){
+function fillInfoBook(value){
     //Alerta
     Swal.fire({
-        title: 'Solcitud entrante',
+        title: 'Solicitud entrante',
         text: 'Un cliente ha solicitado un libro',
         icon: 'info',
         confirmButtonText: 'Aceptar'
@@ -103,6 +103,7 @@ function initServer() {
                         }
                     }
                     c.write(JSON.stringify(resp));
+                    console.log(resp);
 
                     logRequest(c.address().address, book.ISBN).catch(console.error);
 

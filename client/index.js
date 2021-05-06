@@ -80,7 +80,7 @@ function initSocket() {
 }
 
 // Despliegue de información de libro
-function showBook({value}) {
+function showBook(value) {
     //Alerta
     Swal.fire({
         title: 'Solicitud aceptada',

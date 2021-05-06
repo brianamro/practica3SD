@@ -5,7 +5,7 @@
   "scripts": {
     "start:server": "electron server",
     "start:client": "electron client",
-    "start:backup": "node backup/main.js"
+    "start:backup": "node backup/main.mjs"
   },
   "license": "ISC",
   "dependencies": {

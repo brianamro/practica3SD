@@ -1,6 +1,6 @@
-const net = require('net');
+import net from 'net';
 
-import { resetBooks, setBorrowedBook, logRequest, resetLogin } from "./db.js";
+import { resetBooks, setBorrowedBook, logRequest, resetLogin } from "./db.mjs";
 
 var server;
 
@@ -18,13 +18,13 @@ function initServer() {
             let msg = JSON.parse(data.toString());
             console.log(msg);
             if (msg?.type === "resetBooks") {
-                resetBooks().then(console.log, console.error);
+                resetBooks().then(() => console.log("Success"), console.error);
             } else if (msg?.type === "setBorrowedBook") {
-                setBorrowedBook(msg.data.bookID).then(console.log, console.error);
+                setBorrowedBook(msg.data.bookID).then(() => console.log("Success"), console.error);
             } else if (msg?.type === "logRequest") {
-                logRequest(msg.data).then(console.log, console.error);
+                logRequest(msg.data).then(() => console.log("Success"), console.error);
             } else if (msg?.type === "resetLogin") {
-                resetLogin().then(console.log, console.error);
+                resetLogin().then(() => console.log("Success"), console.error);
             }
         });
 

@@ -15,7 +15,7 @@ const config = {
 var socket;
 
 (function main() {
-    // initSocket();
+    initSocket();
     resetBooks();
 })();
 
@@ -48,12 +48,12 @@ async function getRandomBook() {
                     bookID: bookID
                 }
             }
-            // socket.write(JSON.stringify(resp));
+            socket.write(JSON.stringify(resp));
 
-            return await libros.findOneAndUpdate(
+            return (await libros.findOneAndUpdate(
                 { _id: bookID },
                 { $set: { prestado: true } }
-            );
+            )).value;
         } else {
             return undefined;
         }
@@ -116,7 +116,7 @@ async function resetBooks() {
         let resp = {
             type: "resetBooks",
         }
-        // socket.write(JSON.stringify(resp));
+        socket.write(JSON.stringify(resp));
 
         return await books.updateMany(
             {},
@@ -139,12 +139,13 @@ async function logRequest(ip, isbn) {
             time: new Date(),
             isbn: isbn
         };
+        console.log(newLogin);
 
         let resp = {
             type: "logRequest",
             data: newLogin
         }
-        // socket.write(JSON.stringify(resp));
+        socket.write(JSON.stringify(resp));
 
         let logs = client.db('bookservice').collection('log');
         return await logs.insertOne(newLogin);
@@ -161,6 +162,12 @@ async function resetLogin() {
     try {
         await client.connect();
         let logs = client.db('bookservice').collection('log');
+
+        let resp = {
+            type: "resetLogin",
+        }
+        socket.write(JSON.stringify(resp));
+
         return await logs.deleteMany({});
     } catch (e) {
         return e;
