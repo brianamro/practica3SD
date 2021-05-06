@@ -39,7 +39,7 @@ function initServer() {
         c.on('data', (data) => {
             let msg = JSON.parse(data.toString());
             console.log(msg);
-            if (msg?.action === "requestBook") {
+            if (msg?.type === "requestBook") {
                 getRandomBook().then(book => {
                     let resp = {
                         type: "success",
@@ -99,7 +99,7 @@ function enableClientReset() {
         c.on('data', (data) => {
             let msg = JSON.parse(data.toString());
             console.log(msg);
-            if (msg?.action === "reset") {
+            if (msg?.type === "reset") {
                 resetSession().catch(console.error);
             }
         });
