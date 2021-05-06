@@ -201,7 +201,7 @@ section#main-content p{
 }
 .button:hover{
     transition: transform 0.25s ease-in-out; 
-    transform: scale(1.2);
+    transform: scale(1.1);
 }
 .button.primary{
     background-color: rgb(62, 197, 255);
@@ -217,34 +217,4 @@ section#main-content p{
 .button.cancel{
     background-color: transparent;
     border-color: rgb(255, 255, 255);
-}
-/* Contedor de informacion del libro */
-#book-container{
-    height: 30vh;
-    transition: all 0.5s ease-in-out;
-}
-#book-container img{
-    width: 70%;
-}
-#book-container .information{
-    display: none;
-    justify-content: space-evenly;
-}
-#book-container .information > p{
-    flex: 1;
-}
-.container-buttons{
-    padding: 0 20vw;
-    transition: all 0.5s ease-in-out;
-}
-#book-container.showing-info{
-    height: 50vh;
-    transition: all 0.5s ease-in-out;
-}
-#book-container.showing-info .information{
-    display: flex;
-}
-#book-container.showing-info .container-buttons{
-    transition: all 0.5s ease-in-out;
-    padding: 0;
 }
