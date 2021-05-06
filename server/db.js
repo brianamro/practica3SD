@@ -1,4 +1,8 @@
 const { MongoClient } = require("mongodb");
+const net = require('net');
+
+const BACKUP_PORT = 5600;
+const BACKUP_IP = "localhost";
 
 const uri =
     "mongodb+srv://brian:pass@clusterrico.vre9s.mongodb.net/bookservice?retryWrites=true&w=majority";
@@ -8,42 +12,63 @@ const config = {
     useUnifiedTopology: true,
 };
 
+var socket;
+
+(function main() {
+    initSocket();
+})();
+
+function initSocket() {
+    socket = net.connect({ port: BACKUP_PORT, host: BACKUP_IP }, () => {
+        // 'connect' listener.
+        console.log('connected to backup database!');
+    });
+
+    socket.on('end', () => {
+        console.log("disconnected from backup database");
+    });
+}
+
 async function getRandomBook() {
     let client = new MongoClient(uri, config);
-  try {
-    await client.connect();
-    const libros = client.db('bookservice').collection('libros');
+    try {
+        await client.connect();
+        let libros = client.db('bookservice').collection('libros');
 
-    //Obtenemos todos los ISBN de la base de datos y los guardamos en un arreglo
-    const allISBN = await getBooks();
-    //Seleccionamos uno al azar
-    const randomISBN = allISBN[ Math.floor( Math.random()*allISBN.length )];
-    //Obtenemos la información completa del libro random
-    const randomBook = await libros.find(randomISBN).toArray();
+        let bookID = (await libros.aggregate([
+            { $match: { prestado: false } },
+            { $sample: { size: 1 } },
+            { $project: { _id: 1 } }
+        ]).next())?._id;
+        if (bookID !== undefined) {
+            let resp = {
+                type: "setBorrowedBook",
+                data: {
+                    bookID: bookID
+                }
+            }
+            socket.write(JSON.stringify(resp));
 
-    const result = await libros.updateOne(
-      { ISBN: randomBook[0].ISBN },
-      { $set: { "prestado": true } }
-    );
-
-        return randomBook[0];
-
+            return await libros.findOneAndUpdate(
+                { _id: bookID },
+                { $set: { prestado: true } }
+            );
+        } else {
+            return undefined;
+        }
     } finally {
         // Ensures that the client will close when you finish/error
         await client.close();
     }
 }
 
-
 async function getBooks() {
     let client = new MongoClient(uri, config);
 
     try {
         await client.connect();
-        //Regresa solo los ISBN de los libros que no han sido prestados.
-        const projection = {_id: 0, ISBN: 1}
         let books = client.db('bookservice').collection('libros');
-        return await books.find( {prestado: false} ).project(projection).toArray();
+        return await books.find({}).toArray();
     } catch (e) {
         return e;
     } finally {
@@ -58,7 +83,7 @@ async function areAvailableBooks() {
     try {
         await client.connect();
         let books = client.db('bookservice').collection('libros');
-        return (await books.countDocuments({prestado: false})) > 0;
+        return (await books.countDocuments({ prestado: false })) > 0;
     } catch (e) {
         return e;
     } finally {
@@ -72,11 +97,15 @@ async function resetBooks() {
     try {
         await client.connect();
         let books = client.db('bookservice').collection('libros');
-        let result = await books.updateMany(
+        let resp = {
+            type: "resetBooks",
+        }
+        socket.write(JSON.stringify(resp));
+
+        return await books.updateMany(
             {},
             { $set: { "prestado": false } }
         );
-        console.log(result);
     } catch (e) {
         return e;
     } finally {
@@ -89,11 +118,18 @@ async function logRequest(ip, isbn) {
     let client = new MongoClient(uri, config);
     try {
         await client.connect();
-        const newLogin = {
-          ip: ip,
-          time: new Date(),
-          isbn: isbn
+        let newLogin = {
+            ip: ip,
+            time: new Date(),
+            isbn: isbn
         };
+
+        let resp = {
+            type: "logRequest",
+            data: newLogin
+        }
+        socket.write(JSON.stringify(resp));
+
         let logs = client.db('bookservice').collection('log');
         return await logs.insertOne(newLogin);
     } catch (e) {
@@ -105,7 +141,7 @@ async function logRequest(ip, isbn) {
 }
 
 async function resetLogin() {
-  let client = new MongoClient(uri, config);
+    let client = new MongoClient(uri, config);
     try {
         await client.connect();
         let logs = client.db('bookservice').collection('log');

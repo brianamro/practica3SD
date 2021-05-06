@@ -10,7 +10,7 @@ var socket;
 
 export default function main() {
     initClock();
-    initServer();
+    initSocket();
     bindButtons();
 }
 
@@ -38,7 +38,7 @@ function initClock() {
     });
 }
 
-function initServer() {
+function initSocket() {
     socket = net.connect({ port: SERVER_PORT, host: SERVER_IP }, () => {
         // 'connect' listener.
         console.log('connected to server!');

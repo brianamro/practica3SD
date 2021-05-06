@@ -4,7 +4,8 @@
   "description": "",
   "scripts": {
     "start:server": "electron server",
-    "start:client": "electron client"
+    "start:client": "electron client",
+    "start:backup": "node backup/main.js"
   },
   "license": "ISC",
   "dependencies": {
