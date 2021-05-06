@@ -47,7 +47,7 @@ async function getRandomBook() {
                     bookID: bookID
                 }
             }
-            socket.write(JSON.stringify(resp));
+            // socket.write(JSON.stringify(resp));
 
             return await libros.findOneAndUpdate(
                 { _id: bookID },
@@ -100,7 +100,7 @@ async function resetBooks() {
         let resp = {
             type: "resetBooks",
         }
-        socket.write(JSON.stringify(resp));
+        // socket.write(JSON.stringify(resp));
 
         return await books.updateMany(
             {},
@@ -128,7 +128,7 @@ async function logRequest(ip, isbn) {
             type: "logRequest",
             data: newLogin
         }
-        socket.write(JSON.stringify(resp));
+        // socket.write(JSON.stringify(resp));
 
         let logs = client.db('bookservice').collection('log');
         return await logs.insertOne(newLogin);
