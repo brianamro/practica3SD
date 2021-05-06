@@ -19,3 +19,6 @@
 .book-title > p{
     margin-bottom: 5px;
 }
+#last-book{
+    display: none;
+}

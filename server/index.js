@@ -24,7 +24,17 @@ function initClock() {
 }
 
 function fillInfoBook({value}){
+    const lastBookContainer = $('#last-book');
     console.log(value);
+    const {nombre, autor, editorial, precio, ISBN, imagen} = value;
+    lastBookContainer.find("p#nombre span").html(nombre);
+    lastBookContainer.find("p#autor span").html(autor);
+    lastBookContainer.find("p#editorial span").html(editorial);
+    lastBookContainer.find("p#precio span").html(precio);
+    lastBookContainer.find("p#ISBN span").html(ISBN);
+    lastBookContainer.find("img#book-cover").attr("src", `..${imagen}`);
+    //Mostrar contenido
+    lastBookContainer.slideDown(250);
 }
 
 function initServer() {
