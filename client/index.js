@@ -1,17 +1,30 @@
 const net = require('net');
 
-import {asDoubleDigit, updateClockDom} from '../common/utils.js';
+import { updateClockDom } from '../common/utils.js';
 
 const SERVER_PORT = 5500;
 const SERVER_IP = "localhost";
 
 var clock;
-
 var socket;
 
 export default function main() {
     initClock();
     initServer();
+    bindButtons();
+}
+
+function bindButtons() {
+    document.getElementById('btn-request-book').addEventListener('click', function requestBookHdl(event) {
+        event.preventDefault();
+        requestBook();
+        document.getElementById('btn-request-book').removeEventListener('click', requestBookHdl);
+    });
+
+    document.getElementById('btn-reset').addEventListener('click', function resetSessions(event) {
+        event.preventDefault();
+        reset();
+    });
 }
 
 function initClock() {
@@ -26,7 +39,7 @@ function initClock() {
 }
 
 function initServer() {
-    socket = net.connect({port: SERVER_PORT, host: SERVER_IP}, () => {
+    socket = net.connect({ port: SERVER_PORT, host: SERVER_IP }, () => {
         // 'connect' listener.
         console.log('connected to server!');
     });
@@ -36,7 +49,7 @@ function initServer() {
         if (msg?.type === 'success') {
             let book = msg.info?.book;
             console.log(book);
-            // TODO: implementar despliegue de información de libro
+            showBook(book);
         } else if (msg?.type === 'enableReset') {
             enableReset();
         } else if (msg?.type === 'error') {
@@ -47,6 +60,11 @@ function initServer() {
     socket.on('end', () => {
         console.log("disconnected from server");
     });
+}
+
+// TODO: implementar despliegue de información de libro
+function showBook(book) {
+
 }
 
 function reset() {

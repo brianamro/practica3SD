@@ -1,7 +1,7 @@
 const net = require('net');
 
-import { updateClockDom } from '../common/utils';
-import { getBooks, getRandomBook, resetBooks, areAvailableBooks, logRequest } from "./db";
+import { updateClockDom } from '../common/utils.js';
+import { getBooks, getRandomBook, resetBooks, areAvailableBooks, logRequest } from "./db.js";
 
 var mainClock;
 var connections;
@@ -17,7 +17,7 @@ function initClock() {
     //Reloj Maestro
     mainClock.onmessage = e => {
         updateClockDom($(".clock#clock-m"), e.data);
-    }
+    };
     mainClock.postMessage({
         name: "Reloj Maestro"
     });
@@ -27,16 +27,10 @@ function initServer() {
     connections = [];
     server = net.createServer((c) => {
         // 'connection' listener.
-        console.log('client connected');
-        c.on('end', () => {
-            console.log('client disconnected');
-            let idx = connections.indexOf(c);
-            if (idx !== -1) {
-                connections.splice(idx, 1);
-            }
-        });
+        console.log(`${c.address().address} connected`);
 
         c.on('data', (data) => {
+            console.log(`received request from ${c.address().address}`);
             let msg = JSON.parse(data.toString());
             console.log(msg);
             if (msg?.type === "requestBook") {
@@ -67,7 +61,20 @@ function initServer() {
                     console.error(err);
                 });
             }
-        })
+        });
+
+        let closeHandler = (function () {
+            let address = c.address().address;
+            return function () {
+                console.log(`${address} disconnected`);
+                let idx = connections.indexOf(c);
+                if (idx !== -1) {
+                    connections.splice(idx, 1);
+                }
+            }
+        })();
+        c.on('end', closeHandler);
+        c.on('error', closeHandler);
 
         connections.push(c);
     });
@@ -108,8 +115,6 @@ function enableClientReset() {
 
 async function resetSession() {
     await resetBooks();
-    connections.forEach(conn => {
-        conn.close();
-    });
+    connections.forEach(conn => conn.end());
     connections = [];
 }
