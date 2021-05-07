@@ -1,10 +1,13 @@
 const net = require('net');
 const Swal = require('sweetalert2');
+const { ipcRenderer } = require('electron')
 
 import { updateClockDom } from '../common/utils.js';
 
 const SERVER_PORT = 5500;
 const SERVER_IP = "201.97.243.31";
+// const SERVER_IP = "localhost";
+
 
 const bookInfoContainer = $('#book-container');
 
@@ -86,6 +89,8 @@ function initSocket() {
                 socket.on('data', dataCallback);
                 socket.on('end', endCallback);
                 document.getElementById('btn-request-book').addEventListener('click', requestBookHdl);
+            } else {
+                ipcRenderer.send("asynchronous-message", 'exit');
             }
         })
     };
@@ -100,7 +105,7 @@ function showBook(value) {
     Swal.fire({
         title: 'Solicitud aceptada',
         text: 'El prestamo ha sido autorizado',
-        icon: 'info',
+        icon: 'success',
         confirmButtonText: 'Aceptar'
     });
     const infoBook = bookInfoContainer.find(".information");

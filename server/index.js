@@ -26,21 +26,12 @@ function initClock() {
 
 const lastBookContainer = $('#last-book');
 // Boton para reiniciar el servidor
-$('.button#btn-reset-all').on("click", e =>{
+$('.button#btn-reset-all').on("click", e => {
     e.preventDefault();
     resetSession();
-    showAllAvailableBooks();
-    lastBookContainer.slideUp();
-    //Alerta
-    Swal.fire({
-        title: 'Reinicio',
-        text: 'Se ha reiniciado la sesion',
-        icon: 'info',
-        confirmButtonText: 'Aceptar'
-    });
 })
-async function showAllAvailableBooks(){
-    getAvailableBooks().then((books)=>{
+async function showAllAvailableBooks() {
+    getAvailableBooks().then((books) => {
         const allBooksContainer = $('.all-books');
         allBooksContainer.html("");
         books.forEach(book => {
@@ -57,7 +48,7 @@ async function showAllAvailableBooks(){
 }
 
 // Funcion que llena la interfaz con los datos de un libro
-function fillInfoBook(value){
+function fillInfoBook(value) {
     //Alerta
     Swal.fire({
         title: 'Solicitud entrante',
@@ -183,4 +174,14 @@ function resetSession() {
     resetBooks().catch(console.error);
     connections.forEach(conn => conn.end());
     connections = [];
+
+    showAllAvailableBooks();
+    lastBookContainer.slideUp();
+    //Alerta
+    Swal.fire({
+        title: 'Reinicio',
+        text: 'Se ha reiniciado la sesion',
+        icon: 'info',
+        confirmButtonText: 'Aceptar'
+    });
 }

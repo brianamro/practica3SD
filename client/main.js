@@ -1,6 +1,7 @@
 // Modules to control application life and create native browser window
 const { app, BrowserWindow } = require('electron')
 const path = require('path')
+const { ipcMain } = require('electron')
 
 function createWindow() {
     // Create the browser window.
@@ -42,5 +43,10 @@ app.on('window-all-closed', function () {
     if (process.platform !== 'darwin') app.quit()
 })
 
+ipcMain.on('asynchronous-message', (event, arg) => {
+    if (arg === 'exit') {
+        app.quit()
+    }
+})
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
