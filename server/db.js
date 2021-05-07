@@ -55,7 +55,7 @@ async function getRandomBook() {
                 { $set: { prestado: true } }
             )).value;
         } else {
-            return undefined;
+            return Promise.reject(new Error('Could not get an available book'));
         }
     } finally {
         // Ensures that the client will close when you finish/error

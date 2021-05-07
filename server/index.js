@@ -22,7 +22,6 @@ function initClock() {
     mainClock.postMessage({
         name: "Reloj Maestro"
     });
-    
 }
 
 const lastBookContainer = $('#last-book');
@@ -89,7 +88,11 @@ function initServer() {
     server = net.createServer((c) => {
         // 'connection' listener.
         console.log(`${c.address().address} connected`);
-
+        areAvailableBooks().then(res => {
+            if (!res) {
+                enableClientReset();
+            }
+        }).catch(console.error);
         c.on('data', (data) => {
             console.log(`received request from ${c.address().address}`);
             let msg = JSON.parse(data.toString());

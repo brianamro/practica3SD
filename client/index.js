@@ -4,7 +4,7 @@ const Swal = require('sweetalert2');
 import { updateClockDom } from '../common/utils.js';
 
 const SERVER_PORT = 5500;
-const SERVER_IP = "localhost";
+const SERVER_IP = "201.97.243.31";
 
 const bookInfoContainer = $('#book-container');
 
@@ -18,12 +18,14 @@ export default function main() {
     bindButtons();
 }
 
+function requestBookHdl(event) {
+    event.preventDefault();
+    requestBook();
+    document.getElementById('btn-request-book').removeEventListener('click', requestBookHdl);
+}
+
 function bindButtons() {
-    document.getElementById('btn-request-book').addEventListener('click', function requestBookHdl(event) {
-        event.preventDefault();
-        requestBook();
-        document.getElementById('btn-request-book').removeEventListener('click', requestBookHdl);
-    });
+    document.getElementById('btn-request-book').addEventListener('click', requestBookHdl);
 }
 
 function initClock() {
@@ -43,19 +45,26 @@ function initSocket() {
         console.log('connected to server!');
     });
 
-    socket.on('data', data => {
+    let dataCallback = data => {
         let msg = JSON.parse(data.toString());
+        console.log(msg);
         if (msg?.type === 'success') {
             const book = msg.info?.book;
             showBook(book);
         } else if (msg?.type === 'enableReset') {
             enableReset();
         } else if (msg?.type === 'error') {
-            console.error(msg.info.error_msg);
+            //Alerta
+            Swal.fire({
+                title: 'Solicitud rechazada',
+                text: 'No se encontró un libro disponible',
+                icon: 'error',
+                confirmButtonText: 'Cerrar'
+            });
+            document.getElementById('btn-request-book').addEventListener('click', requestBookHdl);
         }
-    });
-
-    socket.on('end', () => {
+    };
+    let endCallback = () => {
         console.log("disconnected from server");
         bookInfoContainer.removeClass("showing-info");
         bookInfoContainer.find("#btn-request-book").removeClass("disabled");
@@ -73,10 +82,16 @@ function initSocket() {
                 socket = net.connect({
                     port: SERVER_PORT,
                     host: SERVER_IP,
-                },()=> console.log("reconectado"));
-            } 
+                }, () => console.log("reconectado"));
+                socket.on('data', dataCallback);
+                socket.on('end', endCallback);
+                document.getElementById('btn-request-book').addEventListener('click', requestBookHdl);
+            }
         })
-    });
+    };
+    socket.on('data', dataCallback);
+
+    socket.on('end', endCallback);
 }
 
 // Despliegue de información de libro
