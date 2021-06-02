@@ -7,6 +7,8 @@ const BACKUP_IP = "localhost";
 const uri =
     "mongodb+srv://brian:pass@clusterrico.vre9s.mongodb.net/bookservice?retryWrites=true&w=majority";
 
+const uri2 = "mongodb+srv://brian:pass@clusterrico.vre9s.mongodb.net/bookserviceBackup?retryWrites=true&w=majority";
+
 const config = {
     useNewUrlParser: true,
     useUnifiedTopology: true,
