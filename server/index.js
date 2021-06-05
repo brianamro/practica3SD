@@ -24,6 +24,53 @@ function initClock() {
     });
 }
 
+// Modal para editar reloj
+const modalEdit = $("#modal-edit-clock");
+// Boton para editar el reloj
+$('#clock-s a.edit-clock').on('click', e=>{
+    e.preventDefault();
+    let currHours = Number($(this).parent().find("h1.hours").html());
+    let currMins = Number($(this).parent().find("h1.mins").html());
+    let currSecs = Number($(this).parent().find("h1.secs").html());
+    //Detener Reloj
+    worker.postMessage({
+        action: 'stop'
+    });
+    // Modificar valores del modal
+    modalEdit.find(".hours input").val(currHours);
+    modalEdit.find(".mins input").val(currMins);
+    modalEdit.find(".secs input").val(currSecs);
+    //Abrir modal
+    modalEdit.addClass('show');
+})
+//Cancelar editar hora en modal
+modalEdit.find("a.button.cancel").on('click', e=>{
+    e.preventDefault();
+    modalEdit.removeClass('show');
+})
+
+//Aceptar cambio
+modalEdit.find("a.button.accept").on("click", e=>{
+    e.preventDefault();
+    let newHours = Number(modalEdit.find("h1.hours input").val())
+    let newMins=    Number(modalEdit.find("h1.mins input").val())
+    let newSecs = Number(modalEdit.find("h1.secs input").val())
+    let time = {
+        hours: newHours,
+        mins: newMins,
+        secs: newSecs,
+    };
+    // TODO:
+    // Cambiar reloj
+    mainClock.postMessage({
+        action: 'setTime',
+        time: time,
+    });
+    // Cerrar modal
+    modalEdit.removeClass("show");
+})
+
+
 const lastBookContainer = $('#last-book');
 // Boton para reiniciar el servidor
 $('.button#btn-reset-all').on("click", e => {

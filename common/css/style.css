@@ -85,7 +85,8 @@ section#main-content p {
     background-color: rgb(45, 213, 243);
 }
 
-.clock a.btn-float.decrease {
+.clock a.btn-float.decrease,
+.clock a.btn-float.increase {
     top: auto;
     bottom: -25px;
     right: 50px;
@@ -94,11 +95,7 @@ section#main-content p {
 }
 
 .clock a.btn-float.increase {
-    top: auto;
-    bottom: -25px;
     right: 0;
-    z-index: 5;
-    background-color: rgba(255, 255, 255, 0.01);
 }
 
 .clock .notification {
