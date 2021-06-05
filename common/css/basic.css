@@ -14,8 +14,9 @@ h2 {
 }
 
 h3, h4, h5 {
-    font-family: 'Cabin', sans-serif;
+    font-family: 'Montserrat', sans-serif;
     text-align: center;
+    color: rgb(226, 226, 226);
 }
 
 h4 {

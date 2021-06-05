@@ -4,7 +4,7 @@ const Swal = require('sweetalert2');
 import { updateClockDom } from '../common/utils.js';
 import { getBooks, getRandomBook, resetBooks, areAvailableBooks, logRequest, getAvailableBooks } from "./db.js";
 
-var mainClock;
+var mainClockWorker;
 var connections;
 var server;
 
@@ -14,12 +14,12 @@ export default function main() {
 }
 
 function initClock() {
-    mainClock = new Worker('../common/worker.js', { type: "module" });
+    mainClockWorker = new Worker('../common/worker.js', { type: "module" });
     //Reloj Maestro
-    mainClock.onmessage = e => {
-        updateClockDom($(".clock#clock-m"), e.data);
+    mainClockWorker.onmessage = e => {
+        updateClockDom($(".clock#clock-s"), e.data);
     };
-    mainClock.postMessage({
+    mainClockWorker.postMessage({
         name: "Reloj Maestro"
     });
 }
@@ -33,7 +33,7 @@ $('#clock-s a.edit-clock').on('click', e=>{
     let currMins = Number($(this).parent().find("h1.mins").html());
     let currSecs = Number($(this).parent().find("h1.secs").html());
     //Detener Reloj
-    worker.postMessage({
+    mainClockWorker.postMessage({
         action: 'stop'
     });
     // Modificar valores del modal
@@ -62,7 +62,7 @@ modalEdit.find("a.button.accept").on("click", e=>{
     };
     // TODO:
     // Cambiar reloj
-    mainClock.postMessage({
+    mainClockWorker.postMessage({
         action: 'setTime',
         time: time,
     });
