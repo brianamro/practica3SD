@@ -1,6 +1,10 @@
 // Modules to control application life and create native browser window
-const { app, BrowserWindow } = require('electron')
-const path = require('path')
+const { app, BrowserWindow } = require('electron');
+
+global.args = {
+    port: app.commandLine.hasSwitch('port') ? Number(app.commandLine.getSwitchValue('port')) : 0,
+    uri: app.commandLine.hasSwitch('uri') ? app.commandLine.getSwitchValue('uri') : "",
+};
 
 function createWindow() {
     // Create the browser window.
@@ -8,7 +12,6 @@ function createWindow() {
         width: 1200,
         height: 650,
         webPreferences: {
-            preload: path.join(__dirname, 'preload.js'),
             nodeIntegrationInWorker: true,
             nodeIntegration: true,
             contextIsolation: false
@@ -19,7 +22,7 @@ function createWindow() {
     mainWindow.setMenuBarVisibility(false);
 
     // Open the DevTools.
-    // mainWindow.webContents.openDevTools()
+    mainWindow.webContents.openDevTools()
 }
 
 // This method will be called when Electron has finished
