@@ -1,9 +1,9 @@
 const asDoubleDigit = num => ((num < 10) ? ("0" + num) : num.toString());
 
 const updateClockDom = (domElement, clock) => {
-    domElement.find("h1.hours").html(asDoubleDigit(clock?.hours));
-    domElement.find("h1.mins").html(asDoubleDigit(clock?.minutes));
-    domElement.find("h1.secs").html(asDoubleDigit(clock?.seconds));
+    domElement.querySelector("h1.hours").innerHTML = asDoubleDigit(clock?.hours);
+    domElement.querySelector("h1.mins").innerHTML = asDoubleDigit(clock?.minutes);
+    domElement.querySelector("h1.secs").innerHTML = asDoubleDigit(clock?.seconds);
 }
 
 export {

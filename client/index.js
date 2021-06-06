@@ -35,7 +35,7 @@ function initClock() {
     clock = new Worker('../common/worker.js', { type: "module" });
     //Reloj Maestro
     clock.onmessage = e => {
-        updateClockDom($('.clock'), e.data);
+        updateClockDom(document.querySelector('.clock'), e.data);
     }
     clock.postMessage({
         name: "Reloj"

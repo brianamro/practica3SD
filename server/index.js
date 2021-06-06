@@ -17,7 +17,7 @@ function initClock() {
     mainClockWorker = new Worker('../common/worker.js', { type: "module" });
     //Reloj Maestro
     mainClockWorker.onmessage = e => {
-        updateClockDom($(".clock#clock-s"), e.data);
+        updateClockDom(document.querySelector(".clock#clock-s"), e.data);
     };
     mainClockWorker.postMessage({
         name: "Reloj Maestro"
@@ -25,32 +25,33 @@ function initClock() {
 }
 
 // Modal para editar reloj
-const modalEdit = $("#modal-edit-clock");
+const modalEdit = document.querySelector("#modal-edit-clock");
 // Boton para editar el reloj
-$('#clock-s a.edit-clock').on('click', e=>{
+document.querySelector('#clock-s a.edit-clock').addEventListener('click', e=>{
     e.preventDefault();
-    let currHours = Number($(this).parent().find("h1.hours").html());
-    let currMins = Number($(this).parent().find("h1.mins").html());
-    let currSecs = Number($(this).parent().find("h1.secs").html());
+    const ClockContainer = e.currentTarget.parentNode
+    const currHours = Number(ClockContainer.querySelector("h1.hours").innerHTML);
+    const currMins = Number(ClockContainer.querySelector("h1.mins").innerHTML);
+    const currSecs = Number(ClockContainer.querySelector("h1.secs").innerHTML);
     //Detener Reloj
     mainClockWorker.postMessage({
         action: 'stop'
     });
     // Modificar valores del modal
-    modalEdit.find(".hours input").val(currHours);
-    modalEdit.find(".mins input").val(currMins);
-    modalEdit.find(".secs input").val(currSecs);
+    modalEdit.querySelector(".hours input").value = currHours;
+    modalEdit.querySelector(".mins input").value = currMins;
+    modalEdit.querySelector(".secs input").value = currSecs;
     //Abrir modal
-    modalEdit.addClass('show');
+    modalEdit.classList.add('show');
 })
 //Cancelar editar hora en modal
-modalEdit.find("a.button.cancel").on('click', e=>{
+modalEdit.querySelector("a.button.cancel").addEventListener('click', e=>{
     e.preventDefault();
-    modalEdit.removeClass('show');
+    modalEdit.classList.remove('show');
 })
 
 //Aceptar cambio
-modalEdit.find("a.button.accept").on("click", e=>{
+modalEdit.querySelector("a.button.accept").addEventListener("click", e=>{
     e.preventDefault();
     let newHours = Number(modalEdit.find("h1.hours input").val())
     let newMins=    Number(modalEdit.find("h1.mins input").val())
@@ -71,26 +72,25 @@ modalEdit.find("a.button.accept").on("click", e=>{
 })
 
 
-const lastBookContainer = $('#last-book');
+const lastBookContainer = document.querySelector('#last-book');
 // Boton para reiniciar el servidor
-$('.button#btn-reset-all').on("click", e => {
+document.querySelector('.button#btn-reset-all').addEventListener("click", e => {
     e.preventDefault();
     resetSession();
 })
 async function showAllAvailableBooks() {
     getAvailableBooks().then((books) => {
-        const allBooksContainer = $('.all-books');
-        allBooksContainer.html("");
-        books.forEach(book => {
-            const { ISBN, autor, nombre } = book;
-            let newBook =
-                `<div class="book-title">
-                 <h4>${nombre}</h4>
-                 <p>${autor}</p>
-                 <p>${ISBN}</p>
-             </div>`
-            allBooksContainer.append(newBook);
-        });
+        const allBooksContainer = document.querySelector('.all-books');
+        allBooksContainer.innerHTML = 
+            books.reduce( (html,book) => {
+                const { ISBN, autor, nombre } = book;
+                return `${html}
+                    <div class="book-title">
+                     <h4>${nombre}</h4>
+                     <p>${autor}</p>
+                     <p>${ISBN}</p>
+                 </div>`
+            }, '');
     });
 }
 
@@ -105,16 +105,17 @@ function fillInfoBook(value) {
     });
     //Adquirir datos
     const { nombre, autor, editorial, precio, ISBN, imagen } = value;
-    lastBookContainer.find("p#nombre span").html(nombre);
-    lastBookContainer.find("p#autor span").html(autor);
-    lastBookContainer.find("p#editorial span").html(editorial);
-    lastBookContainer.find("p#precio span").html(precio);
-    lastBookContainer.find("p#ISBN span").html(ISBN);
-    lastBookContainer.find("img#book-cover").attr("src", `..${imagen}`);
+    lastBookContainer.querySelector("p#nombre span").innerHTML = nombre;
+    lastBookContainer.querySelector("p#autor span").innerHTML = autor;
+    lastBookContainer.querySelector("p#editorial span").innerHTML = editorial;
+    lastBookContainer.querySelector("p#precio span").innerHTML = precio;
+    lastBookContainer.querySelector("p#ISBN span").innerHTML = ISBN;
+    lastBookContainer.querySelector("img#book-cover").setAttribute("src", `..${imagen}`);
     //Mostrar contenido
-    lastBookContainer.slideDown(250);
+    lastBookContainer.classList.add('visible');
     //Actualizar los libros a prestar
     showAllAvailableBooks();
+
 }
 
 function initServer() {
@@ -223,7 +224,7 @@ function resetSession() {
     connections = [];
 
     showAllAvailableBooks();
-    lastBookContainer.slideUp();
+    lastBookContainer.classList.remove('visible');
     //Alerta
     Swal.fire({
         title: 'Reinicio',
