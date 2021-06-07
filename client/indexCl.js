@@ -3,7 +3,7 @@ const Swal = require('sweetalert2');
 const { ipcRenderer } = require('electron');
 const fs = require('fs');
 
-import { updateClockDom } from '../common/utils.js';
+import { updateClockDom, appendLogClock } from '../common/utils.js';
 
 
 const BookInfoContainer = document.querySelector('#book-container');
@@ -26,12 +26,17 @@ function requestBookHdl(event) {
 function bindButtons() {
     BookInfoContainer.querySelector('#btn-request-book').addEventListener('click', requestBookHdl);
 }
-
+let lastSec=0;
 function initClock() {
     clock = new Worker('../common/worker.js', { type: "module" });
     //Reloj Cliente
     clock.onmessage = e => {
         updateClockDom(document.querySelector('.clock'), e.data);
+        //Actualizar log de hora
+        if(lastSec != e.data?.seconds){
+            appendLogClock(document.querySelector('.log-clock'), e.data);
+            lastSec = e.data?.seconds;
+        }
     }
     clock.postMessage({
         name: "Reloj"
@@ -40,7 +45,7 @@ function initClock() {
 
 function configSocket() {
     let dataCallback = data => {
-        let msg = JSON.parse(data.toString());
+        const msg = JSON.parse(data.toString());
         console.log(msg);
         if (msg?.type === 'responseBook') {
             const book = msg.info?.book;

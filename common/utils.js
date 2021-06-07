@@ -6,7 +6,20 @@ const updateClockDom = (domElement, clock) => {
     domElement.querySelector("h1.secs").innerHTML = asDoubleDigit(clock?.seconds);
 }
 
+const appendLogClock = (domElement, clockData) => {
+    let par = document.createElement('p');
+    par.appendChild(document.createTextNode(
+        `${asDoubleDigit(clockData?.hours)} :
+        ${asDoubleDigit(clockData?.minutes)} :
+        ${asDoubleDigit(clockData?.seconds)}
+        `
+    ));
+    domElement.appendChild(par);
+    domElement.scrollTop = domElement.scrollHeight;
+}
+
 export {
     asDoubleDigit,
-    updateClockDom
+    updateClockDom,
+    appendLogClock
 }

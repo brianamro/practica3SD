@@ -169,6 +169,8 @@ main p {
     height: 50vh;
     overflow-y: auto;
     box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
 }
 .log-clock > p{
     padding: 12px 25px;
