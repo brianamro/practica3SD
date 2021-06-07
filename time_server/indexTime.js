@@ -20,7 +20,4 @@ server.listen(8124, () => {
 
 
 
-<<<<<<< HEAD:time_server/time_server.js
 
-=======
->>>>>>> e14bc4d2018c57c5cf728ca2aabc78a736fad489:time_server/indexTime.js
