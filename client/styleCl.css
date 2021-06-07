@@ -14,7 +14,7 @@
     flex: 1;
 }
 .container-buttons{
-    padding: 0 25vw;
+    padding: 0 15vw;
     transition: all 0.5s ease-in-out;
 }
 #book-container.showing-info{

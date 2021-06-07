@@ -6,11 +6,10 @@ const fs = require('fs');
 import { updateClockDom } from '../common/utils.js';
 
 
-const bookInfoContainer = $('#book-container');
+const BookInfoContainer = document.querySelector('#book-container');
 
 var clock;
 var socket;
-
 
 export default function main() {
     initClock();
@@ -21,16 +20,16 @@ export default function main() {
 function requestBookHdl(event) {
     event.preventDefault();
     requestBook();
-    document.getElementById('btn-request-book').removeEventListener('click', requestBookHdl);
+    BookInfoContainer.querySelector('#btn-request-book').removeEventListener('click', requestBookHdl);
 }
 
 function bindButtons() {
-    document.getElementById('btn-request-book').addEventListener('click', requestBookHdl);
+    BookInfoContainer.querySelector('#btn-request-book').addEventListener('click', requestBookHdl);
 }
 
 function initClock() {
     clock = new Worker('../common/worker.js', { type: "module" });
-    //Reloj Maestro
+    //Reloj Cliente
     clock.onmessage = e => {
         updateClockDom(document.querySelector('.clock'), e.data);
     }
@@ -56,13 +55,13 @@ function configSocket() {
                 icon: 'error',
                 confirmButtonText: 'Cerrar'
             });
-            document.getElementById('btn-request-book').addEventListener('click', requestBookHdl);
+            BookInfoContainer.querySelector('#btn-request-book').addEventListener('click', requestBookHdl);
         }
     };
     let endCallback = () => {
         console.log("disconnected from server");
-        bookInfoContainer.removeClass("showing-info");
-        bookInfoContainer.find("#btn-request-book").removeClass("disabled");
+        BookInfoContainer.classList.remove("showing-info");
+        BookInfoContainer.querySelector("#btn-request-book").classList.remove("disabled");
 
         //Alerta de cierree de esision
         Swal.fire({
@@ -76,7 +75,7 @@ function configSocket() {
                 socket = null;
                 //Alerta aceptada, continuar con la sesion
                 findServer();
-                document.getElementById('btn-request-book').addEventListener('click', requestBookHdl);
+                BookInfoContainer.querySelector('#btn-request-book').addEventListener('click', requestBookHdl);
             } else {
                 ipcRenderer.send("asynchronous-message", 'exit');
             }
@@ -136,18 +135,18 @@ function showBook(value) {
         icon: 'success',
         confirmButtonText: 'Aceptar'
     });
-    const infoBook = bookInfoContainer.find(".information");
+    const infoBook = BookInfoContainer.querySelector(".information");
     const { ISBN, autor, editorial, nombre, precio } = value;
     //Rellenar informacion
-    infoBook.find("p#nombre span").html(nombre);
-    infoBook.find("p#autor span").html(autor);
-    infoBook.find("p#editorial span").html(editorial);
-    infoBook.find("p#precio span").html(precio);
-    infoBook.find("p#ISBN span").html(ISBN);
+    infoBook.querySelector("p#nombre span").innerHTML = nombre;
+    infoBook.querySelector("p#autor span").innerHTML = autor;
+    infoBook.querySelector("p#editorial span").innerHTML = editorial;
+    infoBook.querySelector("p#precio span").innerHTML = precio;
+    infoBook.querySelector("p#ISBN span").innerHTML = ISBN;
     //Mostrar Contenedor
-    bookInfoContainer.addClass("showing-info");
+    BookInfoContainer.classList.add("showing-info");
     //Desactivar boton de pedir libro
-    bookInfoContainer.find("#btn-request-book").addClass("disabled");
+    BookInfoContainer.querySelector("#btn-request-book").classList.add("disabled");
 }
 
 function reset() {
@@ -165,7 +164,7 @@ function requestBook() {
 }
 
 function enableReset() {
-    document.getElementById('btn-reset').addEventListener('click', function resetSessions(event) {
+    BookInfoContainer.querySelector('btn-reset').addEventListener('click', resetSessions = (event)=>{
         event.preventDefault();
         reset();
     });
