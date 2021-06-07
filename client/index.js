@@ -1,12 +1,9 @@
 const net = require('net');
 const Swal = require('sweetalert2');
-const { ipcRenderer } = require('electron')
+const { ipcRenderer } = require('electron');
+const fs = require('fs');
 
 import { updateClockDom } from '../common/utils.js';
-
-const SERVER_PORT = 5500;
-const SERVER_IP = "201.97.243.31";
-// const SERVER_IP = "localhost";
 
 
 const bookInfoContainer = $('#book-container');
@@ -17,7 +14,7 @@ var socket;
 
 export default function main() {
     initClock();
-    initSocket();
+    findServer();
     bindButtons();
 }
 
@@ -42,16 +39,11 @@ function initClock() {
     });
 }
 
-function initSocket() {
-    socket = net.connect({ port: SERVER_PORT, host: SERVER_IP }, () => {
-        // 'connect' listener.
-        console.log('connected to server!');
-    });
-
+function configSocket() {
     let dataCallback = data => {
         let msg = JSON.parse(data.toString());
         console.log(msg);
-        if (msg?.type === 'success') {
+        if (msg?.type === 'responseBook') {
             const book = msg.info?.book;
             showBook(book);
         } else if (msg?.type === 'enableReset') {
@@ -81,13 +73,9 @@ function initSocket() {
             denyButtonText: 'No, salir',
         }).then((result) => {
             if (result.isConfirmed) {
+                socket = null;
                 //Alerta aceptada, continuar con la sesion
-                socket = net.connect({
-                    port: SERVER_PORT,
-                    host: SERVER_IP,
-                }, () => console.log("reconectado"));
-                socket.on('data', dataCallback);
-                socket.on('end', endCallback);
+                findServer();
                 document.getElementById('btn-request-book').addEventListener('click', requestBookHdl);
             } else {
                 ipcRenderer.send("asynchronous-message", 'exit');
@@ -96,7 +84,47 @@ function initSocket() {
     };
     socket.on('data', dataCallback);
 
-    socket.on('end', endCallback);
+    socket.on('close', endCallback);
+
+    socket.on('error', err => {
+        if (err.code !== 'ECONNRESET') {
+            console.error(err);
+        }
+    });
+}
+
+function findServer() {
+    let i = 0;
+    let handler;
+    handler = setInterval(() => {
+        fs.readFile('./server/serverList.json', 'utf-8', (err, data) => {
+            if (err) {
+                return console.error(err);
+            }
+            // try to connect with any server
+            let serverList = JSON.parse(data);
+            if (serverList?.peers?.length !== 0) {
+                let len = serverList?.peers?.length;
+                let sv = serverList.peers[i];
+
+                i = (i + 1) % len;
+                let sock = new net.Socket();
+                let serverInfo = `${sv.host}:${sv.port}`;
+                sock.connect(sv, () => {
+                    console.log(`connected to server ${serverInfo}`);
+                    socket = sock;
+                    clearInterval(handler);
+                    configSocket();
+                });
+
+                sock.on('error', err => {
+                    if (err.code === 'ECONNREFUSED') {
+                        console.log(`server ${serverInfo} not available`);
+                    }
+                });
+            }
+        });
+    }, 2000);
 }
 
 // Despliegue de información de libro

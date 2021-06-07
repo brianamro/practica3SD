@@ -23,6 +23,7 @@ export default function main() {
     initClock();
     initServer();
     initComponents();
+    showAllAvailableBooks().catch(console.error);
 }
 
 function initClock() {
@@ -88,6 +89,47 @@ function initComponents() {
     });
 }
 
+function sendToAllPeers(response) {
+    for (let peer of peers) {
+        peer.write(JSON.stringify(response));
+    }
+}
+
+function requestBook(conn) {
+    db.getRandomBook().then(book => {
+        console.log(book);
+        sendToAllPeers({
+            type: "responseBook",
+            info: {
+                book: book,
+                origin: conn.remoteAddress
+            }
+        });
+
+        db.logRequest(conn.remoteAddress, book.isbn).catch(console.error);
+        fillInfoBook(book);
+    }).catch(err => {
+        conn.write(JSON.stringify({
+            type: "error",
+            info: {
+                error_msg: "Error al obtener un libro prestado."
+            }
+        }));
+        console.error(err);
+    });
+}
+
+function handleIncomingData(conn, data) {
+    let msg = JSON.parse(data.toString());
+    console.log(msg);
+    if (msg?.type === "requestBook") {
+        requestBook(msg);
+    } else if (msg?.type === "responseBook") {
+        db.logRequest(msg.info.origin, msg.info.book.isbn).catch(console.error);
+        fillInfoBook(book);
+    }
+}
+
 function initServer() {
     // handle sockets
     fs.readFile('./server/serverList.json', 'utf-8', (err, data) => {
@@ -95,30 +137,33 @@ function initServer() {
             return console.error(err);
         }
         // try connecting with peers
-        let serverList = JSON.parse(data);
-        serverList.peers.forEach(peer => {
+        let peerList = JSON.parse(data);
+        peerList.peers.forEach(peer => {
             if (peer.host === serverInfo.host && peer.port === serverInfo.port) {
                 return;
             }
-            let clientInfo = `${peer.host}:${peer.port}`;
+            let peerInfo = `${peer.host}:${peer.port}`;
             let socket = new net.Socket();
             socket.connect(peer, () => {
-                console.log(`connected to server ${clientInfo}`);
+                console.log(`connected to peer ${peerInfo}`);
                 peers.push(socket);
+            });
+            socket.on('data', (buf) => {
+                handleIncomingData(socket, buf);
             });
             socket.on('error', err => {
                 if (err.code === 'ECONNREFUSED') {
-                    console.log(`server ${clientInfo} not available`);
+                    console.log(`peer ${peerInfo} not available`);
                 }
             });
             socket.on('end', () => {
-                console.log(`disconnected from server ${clientInfo}`);
+                console.log(`disconnected from peer ${peerInfo}`);
             });
         });
 
         // create a TCP server for new peers to connect to
-        if (!serverList.peers.some(peer => peer.host === serverInfo.host && peer.port === serverInfo.port)) {
-            serverList.peers.push(serverInfo);
+        if (!peerList.peers.some(peer => peer.host === serverInfo.host && peer.port === serverInfo.port)) {
+            peerList.peers.push(serverInfo);
         }
         server = net.createServer(c => {
 
@@ -126,10 +171,8 @@ function initServer() {
             console.log(`${client} connected`);
 
             // event delegation for current connections
-            c.on('data', (data) => {
-                console.log(`received request from ${client}`);
-                let msg = JSON.parse(data.toString());
-                console.log(msg);
+            c.on('data', (buf) => {
+                handleIncomingData(c, buf);
             });
             c.on('close', () => {
                 console.log(`${client} disconnected`);
@@ -156,7 +199,7 @@ function initServer() {
         server.listen(serverInfo, () => {
             console.log(`server bound on ${serverInfo.host}:${serverInfo.port}`);
         });
-        fs.writeFile('./server/serverList.json', JSON.stringify(serverList, null, 4), (err) => {
+        fs.writeFile('./server/serverList.json', JSON.stringify(peerList, null, 4), (err) => {
             if (err) return console.error(err);
             console.log("rewrote server list");
         });

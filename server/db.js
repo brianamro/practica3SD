@@ -80,7 +80,6 @@ export default class Db {
     }
     async resetBooks() {
         return this.execQuery(async db => {
-            await client.connect();
             let books = db.collection('libros');
 
             return await books.updateMany(

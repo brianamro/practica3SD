@@ -9,7 +9,6 @@ function createWindow() {
         width: 900,
         height: 600,
         webPreferences: {
-            preload: path.join(__dirname, 'preload.js'),
             nodeIntegrationInWorker: true,
             nodeIntegration: true,
             contextIsolation: false
@@ -20,7 +19,7 @@ function createWindow() {
     mainWindow.setMenuBarVisibility(false);
 
     // Open the DevTools.
-    // mainWindow.webContents.openDevTools()
+    mainWindow.webContents.openDevTools();
 }
 
 // This method will be called when Electron has finished
