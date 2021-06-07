@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SD Practica 3 - Servidor</title>
+    <title>SD Practica 4 - Servidor</title>
     <!-- ------ PLUGINS CSS ------ -->
     <link href="https://fonts.googleapis.com/css2?family=Cabin&family=Montserrat&family=Oswald&display=swap"
         rel="stylesheet">
@@ -21,107 +21,101 @@
 </head>
 
 <body>
-    <!-- Pagina de Datos -->
-    <div class="loader">
-        <div class="bar1"></div>
-        <div class="bar2"></div>
-        <div class="bar3"></div>
-        <div class="bar4"></div>
-        <div class="bar5"></div>
-        <div class="bar6"></div>
-    </div>
-    <!-- Contenedor de los datos personales -->
-    <section id="first-slide">
-        <div class="content">
-            <div>
-                <h1>Práctica 3</h1>
-                <h2>Equipo "Alfa dimanita buena onda maravilla"</h2>
-                <h3>Integrantes</h3>
-                <ul>
-                    <li>
-                        <p>Cruz Belmont Ivan Ricardo</p>
-                    </li>
-                    <li>
-                        <p>Gonzalez Amaro Brian</p>
-                    </li>
-                    <li>
-                        <p>Espina del Angel Jose Julian</p>
-                    </li>
-                    <li>
-                        <p>Garcia Alberto Jared</p>
-                    </li>
-                    <li>
-                        <p>Imanol</p>
-                    </li>
-                </ul>
-
-                <a href="#" class="start-button" id="btn-transtion">
-                    <span>Empezar</span>
-                    <svg width="13px" height="10px" viewBox="0 0 13 10">
-                        <path d="M1,5 L11,5"></path>
-                        <polyline points="8 1 12 5 8 9"></polyline>
-                    </svg>
-                </a>
-            </div>
-        </div>
-    </section id="first-slide">
-    <!-- Contenedor de la practica -->
-    <section id="main-content">
-        <h1>Solicitar Libros - Servidor</h1>
-        <div class="row-flex-container">
-            <!-- Reloj 1 -->
-            <div class="clock" id="clock-m">
-                <div class="content-info">
-                    <h1 class="hours"></h1>
-                    <h1 class="dots">:</h1>
-                    <h1 class="mins"></h1>
-                    <h1 class="dots">:</h1>
-                    <h1 class="secs"></h1>
-                </div>
-            </div>
-        </div>
-        <div id="last-book">
-            <h2>Ultimo libro Solicitado</h2>
-            <div class="row-flex-container" >
-                <div class="flex-column">
-                    <img id="book-cover"src="" alt="">
-                </div>
-                <div class="flex-column information">
-                    <p class="rich center" id="nombre">Nombre: <span></span></p>
-                    <p class="rich center" id="autor">Autor: <span></span></p>
-                    <p class="rich center" id="editorial">Editorial: <span></span></p>
-                    <p class="rich center" id="precio">Precio: <span></span></p>
-                    <p class="rich center" id="ISBN">ISBN: <span></span></p>
+    <main class="row-flex">
+        <!-- Contenedor de la practica -->
+        <section class="flex-item-4">
+            <h1>Solicitar Libros - Servidor</h1>
+            <div class="row-flex row-container">
+                <!-- Reloj Servidor -->
+                <div class="clock" id="clock-s">
+                    <a href="#" class="btn-float edit-clock">
+                        <i class="fas fa-edit"></i>
+                    </a>
+                    <a href="#" class="btn-float send-clock">
+                        <i class="fas fa-sign-in-alt"></i>
+                    </a>
+                    <a href="#" class="btn-float decrease">
+                        <i class="fas fa-arrow-circle-left"></i>
+                    </a>
+                    <a href="#" class="btn-float increase">
+                        <i class="fas fa-arrow-circle-right"></i>
+                    </a>
+                    <div class="notification">
+                        <p>EL reloj ha sido actualizado</p>
+                    </div>
+                    <div class="content-info">
+                        <h1 class="hours"></h1>
+                        <h1 class="dots">:</h1>
+                        <h1 class="mins"></h1>
+                        <h1 class="dots">:</h1>
+                        <h1 class="secs"></h1>
+                    </div>
                 </div>
 
+
             </div>
-        </div>
-        <h2>Libros Disponibles</h2>
-        <div class="all-books">
-            <!-- <div class="book-title">
+
+            <h2>Libros Disponibles</h2>
+            <div class="all-books">
+                <!-- <div class="book-title">
                 <h4>Orgullo y prejuicio</h4>
                 <p>Editorial Novarro</p>
                 <p>asdasdasdsadasd</p>
             </div> -->
-        </div>
-        <div class="flex-row container-buttons" style="padding: 0 45px; width: auto;">
-            <div style="flex: 1"> </div>
-            <a href="#" class="button green" id="btn-reset-all" style="width: 25%">Reiniciar</a>
+            </div>
+            <div class="flex-row container-buttons" style="padding: 0 45px; width: auto;">
+                <div style="flex: 1"> </div>
+                <a href="#" class="button green" id="btn-reset-all" style="width: 25%">Reiniciar</a>
+            </div>
+
+            <div id="last-book" class="rotation-3d">
+                <h2>Ultimo libro Solicitado</h2>
+                <div class="row-flex row-container">
+                    <div class="flex-column">
+                        <img id="book-cover" src="" alt="">
+                    </div>
+                    <div class="flex-column information">
+                        <p class="rich center" id="nombre">Nombre: <span></span></p>
+                        <p class="rich center" id="autor">Autor: <span></span></p>
+                        <p class="rich center" id="editorial">Editorial: <span></span></p>
+                        <p class="rich center" id="precio">Precio: <span></span></p>
+                        <p class="rich center" id="ISBN">ISBN: <span></span></p>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+        <aside class="log-clock-container flex-item-1">
+            <h2>Registro de Hora</h2>
+            <div class="log-clock">
+                <!-- <p>12:20:21</p> -->
+            </div>
+        </aside>
+    </main>
+
+    <!-- Modal de Edicion de Hora -->
+    <section id="modal-edit-clock">
+        <div class="container-clock">
+            <h3>Editar reloj</h3>
+            <div class="clock">
+                <div class="content-info">
+                    <h1 class="hours">HH<input type="number" value="24"></h1>
+                    <h1 class="dots">:</h1>
+                    <h1 class="mins">MM<input type="number" value="59"></h1>
+                    <h1 class="dots">:</h1>
+                    <h1 class="secs">SS<input type="number" value="59"></h1>
+                </div>
+            </div>
+            <div class="flex-row container-buttons">
+                <a href="#" class="button cancel" style="width: 40%;">Cancelar</a>
+                <a href="#" class="button accept green" style="width: 40%;">Aceptar</a>
+            </div>
         </div>
     </section>
 
     <!-- ======== SCRIPTS ======== -->
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
-        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
-    <script>
-        window.jQuery || document.write('<script src="../common/vendor/jquery.min.js"><\/script>')
-    </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.16.1/TweenMax.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.12.1/plugins/CSSRulePlugin.min.js"></script>
-
-    <script type="text/javascript" src="../common/animation.js"></script>
     <script type="module">
-        import main from './index.js'
+        import main from './indexSer.js'
         main();
     </script>
 </body>

@@ -22,6 +22,20 @@
 .book-title>p {
     margin-bottom: 5px;
 }
-#last-book{
-    display: none;
+.rotation-3d{
+    opacity: 0;
+    transition: opacity 0.3s, visibility 0.3s;
+    visibility: hidden;
+}
+.rotation-3d.visible{
+    opacity: 1;
+    visibility: visible;
+    animation: cd-3d-rotation 0.5s 0.3s;
+    transform-origin: center top;
+    /* Force Hardware Acceleration */
+    transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    animation-fill-mode: backwards;
+    height: auto;
 }

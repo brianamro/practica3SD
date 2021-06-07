@@ -1,31 +1,48 @@
 const getRandom = maxNum => (Math.floor(Math.random() * maxNum));
 
+const dayInMillis = 24 * 60 * 60 * 1000;
+const hourInMillis = 60 * 60 * 1000;
+const minuteInMillis = 60 * 1000;
+
+function mod(n, b) {
+    if (n > b) {
+        return n - b;
+    } else {
+        return n;
+    }
+}
+
 export default class Clock {
-    constructor(hours, mins, secs) {
+    constructor(hours, mins, secs, millis) {
         let now = new Date();
-        hours = (hours ?? now.getHours()) % 24;
-        mins = (mins ?? now.getMinutes()) % 60;
-        secs = (secs ?? now.getSeconds()) % 60;
-        this._seconds = hours * 60 * 60 + mins * 60 + secs;
+        hours = mod((hours ?? now.getHours()), 24);
+        mins = mod((mins ?? now.getMinutes()), 60);
+        secs = mod((secs ?? now.getSeconds()), 60);
+        millis = mod((millis ?? now.getMilliseconds()), 1000);
+        this._millis = hours * hourInMillis + mins * minuteInMillis + secs * 1000 + millis;
     }
     get time() {
-        let hours = Math.floor(this._seconds / (60 * 60));
-        let minutes = Math.floor((this._seconds - hours * 60 * 60) / 60);
-        let seconds = this._seconds - minutes * 60 - hours * 60 * 60;
+        let hours = Math.floor(this._millis / hourInMillis);
+        let minutes = Math.floor((this._millis - hours * hourInMillis) / minuteInMillis);
+        let seconds = Math.floor((this._millis - minutes * minuteInMillis - hours * hourInMillis) / 1000);
+        let millis = this._millis - hours * hourInMillis - minutes * minuteInMillis - seconds * 1000;
         return {
             hours: hours,
             minutes: minutes,
-            seconds: seconds
+            seconds: seconds,
+            millis: millis
         };
     }
     set time(newTime) {
-        newTime.hours %= 24;
-        newTime.mins %= 60;
-        newTime.secs %= 60;
-        this._seconds = newTime.hours * 60 * 60 + newTime.mins * 60 + newTime.secs;
+        newTime.hours = mod(newTime.hours, 24);
+        newTime.mins = mod(newTime.mins, 60);
+        newTime.secs = mod(newTime, 60);
+        newTime.millis = mod(newTime, 1000);
+        this._millis = newTime.hours * hourInMillis + newTime.mins * minuteInMillis + newTime.secs * 1000 + newTime.millis;
     }
-    advance() {
-        this._seconds = (this._seconds + 1) % (24 * 60 * 60);
+    advance(millis) {
+        millis = millis ?? 1;
+        this._millis = mod(this._millis + millis, dayInMillis);
     }
 }
 

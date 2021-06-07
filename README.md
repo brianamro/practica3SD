@@ -1,4 +1,4 @@
-# Sistemas Distribuidos Practica 3
+# Sistemas Distribuidos Practica 4
 #### Escuela Superior de Computo - IPN, Mexico
 
 ## Como usarlo
@@ -12,6 +12,12 @@ git clone
 cd 
 # Install dependencies
 npm install
+```
+### Correr servidor de tiempo
+Dado que es el servidor que maneja la sincronia de tiempos entre los servidores y usuarios, primer deberas de correrlo.
+En una terminal con el comando:
+```bash
+npm run start:time
 ```
 
 ### Correr cliente - servidor
