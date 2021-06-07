@@ -15,7 +15,7 @@ function createWindow() {
         }
     })
 
-    mainWindow.loadFile('index.html');
+    mainWindow.loadFile('indexCli.html');
     mainWindow.setMenuBarVisibility(false);
 
     // Open the DevTools.
