@@ -25,11 +25,17 @@ export default function main() {
     initComponents();
 }
 
+let lastSec=0;
 function initClock() {
     mainClockWorker = new Worker('../common/worker.js', { type: "module" });
     //Reloj Maestro
     mainClockWorker.onmessage = e => {
-        updateClockDom(document.querySelector(".clock#clock-s"), e.data);
+        updateClockDom(document.querySelector(".clock"), e.data);
+        //Actualizar log de hora
+        if(lastSec != e.data?.seconds){
+            appendLogClock(document.querySelector('.log-clock'), e.data);
+            lastSec = e.data?.seconds;
+        }
     };
     mainClockWorker.postMessage({
         name: "Reloj Maestro"
