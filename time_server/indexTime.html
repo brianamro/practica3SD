@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SD Practica 4 - Servidor de Tiempo</title>
+    <!-- ------ PLUGINS CSS ------ -->
+    <link href="https://fonts.googleapis.com/css2?family=Cabin&family=Montserrat&family=Oswald&display=swap"
+        rel="stylesheet">
+    <!-- ------ CSS ------ -->
+    <link rel="stylesheet" href="../common/css/basic.css">
+    <link rel="stylesheet" href="../common/css/style.css">
+    <link rel="stylesheet" href="styleCl.css">
+    <!-- --- PLUGIS JS --- -->
+    <script src="https://kit.fontawesome.com/faf5c76420.js" crossorigin="anonymous"></script>
+
+</head>
+
+<body>
+    <!-- Contendor Principal -->
+    <main class="row-flex">
+        <section>
+            <h1>Servidor de Tiempo</h1>
+            <div class="row-flex">
+                <!-- Reloj Cliente -->
+                <div class="clock" id="clock-cli">
+                    <div class="content-info">
+                        <h1 class="hours">--</h1>
+                        <h1 class="dots">:</h1>
+                        <h1 class="mins">--</h1>
+                        <h1 class="dots">:</h1>
+                        <h1 class="secs">--</h1>
+                    </div>
+                </div>
+            </div>
+        
+        </section>
+        <aside class="log-clock-container flex-item-1">
+            <h2>Registro de Hora</h2>
+            <div class="log-clock">
+                <!-- <p>12:20:21</p> -->
+            </div>
+        </aside>
+    </main>
+    
+    <!-- ======== SCRIPTS ======== -->
+    <script type="module">
+        import main from './time_server.js'
+        main();
+    </script>
+</body>
+
+</html>
