@@ -6,13 +6,7 @@ section#first-slide p {
     font-size: 1.2em;
 }
 
-.row-flex{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    box-sizing: border-box;
-}
+
 main {
     background-color: rgb(51, 51, 51);
     width: 100%;
@@ -36,22 +30,35 @@ main h2 {
 main p {
     color: rgb(225, 225, 225);
 }
-.main-content{
-    flex: 4;
-}
 
-.row-container {
-    margin-bottom: 25px;
-    padding: 0 45px;
-}
-
-.column-flex-container {
+.row-flex{
     display: flex;
-    flex-direction: column;
-    box-sizing: border-box;
-    margin-bottom: 25px;
+    flex-direction: row;
     align-items: center;
     justify-content: center;
+    box-sizing: border-box;
+}
+
+.column-flex{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    margin-bottom: 25px;
+}
+
+.flex-item-1{
+    flex: 1;
+}
+.flex-item-2{
+    flex: 2;
+}
+.flex-item-3{
+    flex: 3;
+}
+.flex-item-4{
+    flex: 4;
 }
 
 .clock {
@@ -151,7 +158,6 @@ main p {
 
 /* Contenedor para historial de horas */
 .log-clock-container{
-    flex: 1;
     padding-left: 40px;
     height: 100%;
     padding: 0 15px;
@@ -228,7 +234,6 @@ main p {
     flex-wrap: wrap;
     width: 100%;
     height: 100%;
-    flex: 1;
 }
 
 .flex-row {
