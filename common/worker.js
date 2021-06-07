@@ -7,12 +7,9 @@ var internal_clock = new Clock();
 const mainLoop = velocity => {
     return setInterval(function () {
         internal_clock.advance(velocity);
+        postMessage(internal_clock.time);
     }, 50);
 }
-
-setInterval(() => {
-    postMessage(internal_clock.time);
-}, 50);
 
 var name;
 
