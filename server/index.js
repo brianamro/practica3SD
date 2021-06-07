@@ -1,14 +1,20 @@
 const net = require('net');
 const Swal = require('sweetalert2');
 const { remote } = require('electron');
+const fs = require('fs');
 
 const args = remote.getGlobal('args');
+
+const serverInfo = {
+    host: "localhost",
+    port: args.port
+}
 
 import { updateClockDom } from '../common/utils.js';
 import Db from "./db.js";
 
 var mainClockWorker;
-var connections;
+var peers = [];
 var server;
 var db;
 
@@ -41,10 +47,6 @@ function initComponents() {
         const currHours = Number(ClockContainer.querySelector("h1.hours").innerHTML);
         const currMins = Number(ClockContainer.querySelector("h1.mins").innerHTML);
         const currSecs = Number(ClockContainer.querySelector("h1.secs").innerHTML);
-        //Detener Reloj
-        mainClockWorker.postMessage({
-            action: 'stop'
-        });
         // Modificar valores del modal
         modalEdit.querySelector(".hours input").value = currHours;
         modalEdit.querySelector(".mins input").value = currMins;
@@ -61,9 +63,9 @@ function initComponents() {
     //Aceptar cambio
     modalEdit.querySelector("a.button.accept").addEventListener("click", e => {
         e.preventDefault();
-        let newHours = Number(modalEdit.find("h1.hours input").val())
-        let newMins = Number(modalEdit.find("h1.mins input").val())
-        let newSecs = Number(modalEdit.find("h1.secs input").val())
+        let newHours = Number(modalEdit.querySelector("h1.hours input").value);
+        let newMins = Number(modalEdit.querySelector("h1.mins input").value);
+        let newSecs = Number(modalEdit.querySelector("h1.secs input").value);
         let time = {
             hours: newHours,
             mins: newMins,
@@ -75,11 +77,9 @@ function initComponents() {
             action: 'setTime',
             time: time,
         });
-        // Boton para reiniciar el servidor
-        $('.button#btn-reset-all').on("click", e => {
-            e.preventDefault();
-            resetSession();
-        })
+
+        //Cerrar modal
+        modalEdit.classList.remove('show');
     });
 
     // Boton para reiniciar el servidor
@@ -91,29 +91,39 @@ function initComponents() {
 
 function initServer() {
     // handle sockets
-    fs.readFile("./serverList.json", (err, data) => {
-
+    fs.readFile('./server/serverList.json', 'utf-8', (err, data) => {
+        if (err) {
+            return console.error(err);
+        }
         // try connecting with peers
         let serverList = JSON.parse(data);
-        serverList.peers.forEach(sv => {
+        serverList.peers.forEach(peer => {
+            if (peer.host === serverInfo.host && peer.port === serverInfo.port) {
+                return;
+            }
+            let clientInfo = `${peer.host}:${peer.port}`;
             let socket = new net.Socket();
-            socket.connect({ port: sv.port, host: sv.host }, () => {
-                console.log(`connected to server ${sv.host}:${sv.port}`);
-                this._peers.push(socket);
+            socket.connect(peer, () => {
+                console.log(`connected to server ${clientInfo}`);
+                peers.push(socket);
+            });
+            socket.on('error', err => {
+                if (err.code === 'ECONNREFUSED') {
+                    console.log(`server ${clientInfo} not available`);
+                }
             });
             socket.on('end', () => {
-                console.log(`disconnected from server ${sv.host}:${sv.port}`);
+                console.log(`disconnected from server ${clientInfo}`);
             });
         });
 
         // create a TCP server for new peers to connect to
-        serverList.peers.push({
-            host: "localhost",
-            port: port
-        });
-        this._server = net.createServer(c => {
+        if (!serverList.peers.some(peer => peer.host === serverInfo.host && peer.port === serverInfo.port)) {
+            serverList.peers.push(serverInfo);
+        }
+        server = net.createServer(c => {
 
-            let client = `${c.address}:${c.port}`;
+            let client = `${c.remoteAddress}:${c.remotePort}`;
             console.log(`${client} connected`);
 
             // event delegation for current connections
@@ -124,30 +134,33 @@ function initServer() {
             });
             c.on('close', () => {
                 console.log(`${client} disconnected`);
-                let idx = this._peers.indexOf(c);
+                let idx = peers.indexOf(c);
                 if (idx !== -1) {
-                    this._peers.splice(idx, 1);
+                    peers.splice(idx, 1);
                 }
             });
-            c.on('error', err => console.log(err));
+            c.on('error', err => console.error(err));
 
             peers.push(c);
         });
-        this._server.on('error', (err) => {
+        server.on('error', (err) => {
             if (err.code === 'EADDRINUSE') {
                 console.log('Address in use, retrying...');
                 setTimeout(() => {
                     server.close();
-                    server.listen(port);
+                    server.listen(serverInfo.port);
                 }, 1000);
             } else {
                 throw err;
             }
         });
-        this._server.listen(port, () => {
-            console.log(`server bound on port ${port}`);
+        server.listen(serverInfo, () => {
+            console.log(`server bound on ${serverInfo.host}:${serverInfo.port}`);
         });
-        fs.writeFile('./serverList.json', JSON.stringify(serverList));
+        fs.writeFile('./server/serverList.json', JSON.stringify(serverList, null, 4), (err) => {
+            if (err) return console.error(err);
+            console.log("rewrote server list");
+        });
     });
 }
 
@@ -210,7 +223,7 @@ function enableClientReset() {
 }
 
 function resetSession() {
-    resetBooks().catch(console.error);
+    db.resetBooks().catch(console.error);
     connections.forEach(conn => conn.end());
     connections = [];
 
