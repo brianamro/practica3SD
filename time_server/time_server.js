@@ -17,7 +17,7 @@ server.on('error', (err) => {
 });
   
 server.listen(8124, () => {
-    console.log('server bound');
+    console.log('time server bound');
 });
 
 
