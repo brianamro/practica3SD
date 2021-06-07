@@ -1,6 +1,16 @@
 const net = require('net');
 const { setTimeout } = require('timers');
 
+const hostPortTimeServer = {
+    "host": "localhost",
+    "port": 5510
+}
+
+export default function main() {
+    // initClock();
+    server();
+    // initComponents();
+}
 
 const server = net.createServer();
 server.on('connection', (client) => {
@@ -11,7 +21,7 @@ server.on('error', (err) => {
     console.log("Error al iniciar socket");
 });
   
-server.listen(8124, () => {
+server.listen(hostPortTimeServer, () => {
     console.log('time server bound');
 });
 
