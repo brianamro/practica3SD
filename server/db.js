@@ -1,35 +1,56 @@
 const { MongoClient } = require("mongodb");
 
 export default class Db {
-    _server;
-    _peers = [];
     _mongoConfig = {
         useNewUrlParser: true,
         useUnifiedTopology: true,
     };
-    constructor(uri) {
+    constructor(uri, db) {
         this._uri = uri;
+        this._db = db;
     }
-    async getRandomBook() {
-        let client = new MongoClient(uri, config);
+    async execQuery(query) {
+        let client = new MongoClient(this._uri, this._config);
         try {
             await client.connect();
-            let libros = client.db('bookservice').collection('libros');
+            let db = client.db(this._db);
+            return query(db);
+        } catch (e) {
+            return e;
+        } finally {
+            // Ensures that the client will close when you finish/error
+            await client.close();
+        }
+    }
+    async setBorrowedBook(isbn) {
+        return this.execQuery((db) => {
+            let libros = db.collection('libros');
+            return await libros.updateOne(
+                { isbn: isbn },
+                { $set: { prestado: true } }
+            );
+        });
+    }
+
+    async setBooksBatch(books) {
+        return this.execQuery((db) => {
+            let bulk = db.collection('libros').initializeUnorderedBulkOp();
+            for (let book of books) {
+                bulk.find({ isbn: book.isbn }).updateOne({ $set: { prestado: book.prestado } });
+            }
+            return await bulk.execute();
+        });
+    }
+    async getRandomBook() {
+        return this.execQuery((db) => {
+            let libros = db.collection('libros');
 
             let bookID = (await libros.aggregate([
                 { $match: { prestado: false } },
                 { $sample: { size: 1 } },
-                { $project: { _id: 1 } }
+                { $project: { _id: true } }
             ]).next())?._id;
             if (bookID !== undefined) {
-                let resp = {
-                    type: "setBorrowedBook",
-                    data: {
-                        bookID: bookID
-                    }
-                }
-                socket.write(JSON.stringify(resp));
-
                 return (await libros.findOneAndUpdate(
                     { _id: bookID },
                     { $set: { prestado: true } }
@@ -37,119 +58,70 @@ export default class Db {
             } else {
                 return Promise.reject(new Error('Could not get an available book'));
             }
-        } finally {
-            // Ensures that the client will close when you finish/error
-            await client.close();
-        }
+        });
     }
     async getBooks() {
-        let client = new MongoClient(uri, config);
-
-        try {
-            await client.connect();
-            let books = client.db('bookservice').collection('libros');
+        return this.execQuery((db) => {
+            let books = db.collection('libros');
             return await books.find({}).toArray();
-        } catch (e) {
-            return e;
-        } finally {
-            // Ensures that the client will close when you finish/error
-            await client.close();
-        }
+        });
     }
     async getAvailableBooks() {
-        let client = new MongoClient(uri, config);
-
-        try {
-            await client.connect();
-            let books = client.db('bookservice').collection('libros');
+        return this.execQuery((db) => {
+            let books = db.collection('libros');
             return await books.find({ prestado: false }).toArray();
-        } catch (e) {
-            return e;
-        } finally {
-            // Ensures that the client will close when you finish/error
-            await client.close();
-        }
+        });
     }
     async areAvailableBooks() {
-        let client = new MongoClient(uri, config);
-
-        try {
-            await client.connect();
-            let books = client.db('bookservice').collection('libros');
+        return this.execQuery((db) => {
+            let books = db.collection('libros');
             return (await books.countDocuments({ prestado: false })) > 0;
-        } catch (e) {
-            return e;
-        } finally {
-            // Ensures that the client will close when you finish/error
-            await client.close();
-        }
+        });
     }
     async resetBooks() {
-        let client = new MongoClient(uri, config);
-        try {
+        return this.execQuery((db) => {
             await client.connect();
-            let books = client.db('bookservice').collection('libros');
-            let resp = {
-                type: "resetBooks",
-            }
-            socket.write(JSON.stringify(resp));
+            let books = db.collection('libros');
 
             return await books.updateMany(
                 {},
                 { $set: { "prestado": false } }
             );
-        } catch (e) {
-            return e;
-        } finally {
-            // Ensures that the client will close when you finish/error
-            await client.close();
-        }
+        });
     }
 
     async logRequest(ip, isbn) {
-        let client = new MongoClient(uri, config);
-        try {
-            await client.connect();
+        return this.execQuery((db) => {
             let newLogin = {
                 ip: ip,
                 time: new Date(),
                 isbn: isbn
             };
-            console.log(newLogin);
 
-            let resp = {
-                type: "logRequest",
-                data: newLogin
-            }
-            socket.write(JSON.stringify(resp));
-
-            let logs = client.db('bookservice').collection('log');
+            let logs = db.collection('log');
             return await logs.insertOne(newLogin);
-        } catch (e) {
-            return e;
-        } finally {
-            // Ensures that the client will close when you finish/error
-            await client.close();
-        }
+        });
     }
 
-    async resetLogin() {
-        let client = new MongoClient(uri, config);
-        try {
-            await client.connect();
-            let logs = client.db('bookservice').collection('log');
+    async getLogs() {
+        return this.execQuery((db) => {
+            let logs = db.collection('log');
+            return await logs.find({}).toArray();
+        });
+    }
 
-            let resp = {
-                type: "resetLogin",
-            }
-            socket.write(JSON.stringify(resp));
+    async logRequestBatch(reqs) {
+        return this.execQuery((db) => {
+            let logs = db.collection('libros');
 
+            return await logs.insertMany(reqs, { ordered: true });
+        });
+    }
+
+    async resetLogs() {
+        return this.execQuery((db) => {
+            let logs = db.collection('log');
             return await logs.deleteMany({});
-        } catch (e) {
-            return e;
-        } finally {
-            // Ensures that the client will close when you finish/error
-            await client.close();
-        }
+        });
     }
 }

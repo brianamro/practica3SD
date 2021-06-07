@@ -19,7 +19,7 @@ var server;
 var db;
 
 export default function main() {
-    db = new Db(args.uri);
+    db = new Db(args.uri, args.db);
 
     initClock();
     initServer();
@@ -165,7 +165,7 @@ function initServer() {
 }
 
 async function showAllAvailableBooks() {
-    getAvailableBooks().then((books) => {
+    db.getAvailableBooks().then((books) => {
         const allBooksContainer = document.querySelector('.all-books');
         allBooksContainer.innerHTML =
             books.reduce((html, book) => {
@@ -223,9 +223,8 @@ function enableClientReset() {
 }
 
 function resetSession() {
+    let lastBookContainer = document.querySelector('#last-book');
     db.resetBooks().catch(console.error);
-    connections.forEach(conn => conn.end());
-    connections = [];
 
     showAllAvailableBooks();
     lastBookContainer.classList.remove('visible');

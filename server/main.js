@@ -4,6 +4,7 @@ const { app, BrowserWindow } = require('electron');
 global.args = {
     port: app.commandLine.hasSwitch('port') ? Number(app.commandLine.getSwitchValue('port')) : 0,
     uri: app.commandLine.hasSwitch('uri') ? app.commandLine.getSwitchValue('uri') : "",
+    db: app.commandLine.hasSwitch('db') ? app.commandLine.getSwitchValue('db') : "",
 };
 
 function createWindow() {
