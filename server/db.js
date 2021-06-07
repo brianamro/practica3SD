@@ -10,11 +10,11 @@ export default class Db {
         this._db = db;
     }
     async execQuery(query) {
-        let client = new MongoClient(this._uri, this._config);
+        let client = new MongoClient(this._uri, this._mongoConfig);
         try {
             await client.connect();
             let db = client.db(this._db);
-            return query(db);
+            return await query(db);
         } catch (e) {
             return e;
         } finally {
@@ -32,13 +32,12 @@ export default class Db {
         });
     }
 
-    async setBooksBatch(books) {
+    async setBooksBatch(bookArr) {
         return this.execQuery(async db => {
-            let bulk = db.collection('libros').initializeUnorderedBulkOp();
-            for (let book of books) {
-                bulk.find({ isbn: book.isbn }).updateOne({ $set: { prestado: book.prestado } });
-            }
-            return await bulk.execute();
+            let books = db.collection('libros');
+            await books.deleteMany({});
+
+            return await books.insertMany(bookArr, { ordered: true });
         });
     }
     async getRandomBook() {
@@ -63,7 +62,9 @@ export default class Db {
     async getBooks() {
         return this.execQuery(async db => {
             let books = db.collection('libros');
-            return await books.find({}).toArray();
+            return await books.aggregate([
+                { $project: { _id: false } }
+            ]).toArray();
         });
     }
     async getAvailableBooks() {
@@ -105,13 +106,16 @@ export default class Db {
     async getLogs() {
         return this.execQuery(async db => {
             let logs = db.collection('log');
-            return await logs.find({}).toArray();
+            return await logs.aggregate([
+                { $project: { _id: false } }
+            ]).toArray();
         });
     }
 
     async logRequestBatch(reqs) {
         return this.execQuery(async db => {
-            let logs = db.collection('libros');
+            let logs = db.collection('log');
+            await logs.deleteMany({});
 
             return await logs.insertMany(reqs, { ordered: true });
         });

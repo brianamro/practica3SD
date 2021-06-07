@@ -23,7 +23,6 @@ export default function main() {
     initClock();
     initServer();
     initComponents();
-    showAllAvailableBooks().catch(console.error);
 }
 
 function initClock() {
@@ -122,9 +121,31 @@ function requestBook(conn) {
 function handleIncomingData(conn, data) {
     let msg = JSON.parse(data.toString());
     console.log(msg);
-    if (msg?.type === "requestBook") {
-        requestBook(msg);
+    if (msg?.type === "requestGlobalStatus") {
+        Promise.all([db.getBooks(), db.getLogs()])
+            .then(([r1, r2]) => {
+                conn.write(JSON.stringify({
+                    type: "responseGlobalStatus",
+                    info: {
+                        books: r1,
+                        logs: r2
+                    }
+                }));
+            }).catch(console.error);
+    } else if (msg?.type === "responseGlobalStatus") {
+        let books = msg.info.books;
+        let logs = msg.info.logs;
+        console.log(books);
+        console.log(logs);
+        db.setBooksBatch(books).then(() => {
+            return showAllAvailableBooks();
+        })
+            .catch(console.error);
+        db.setLogsBatch(logs).catch(console.error);
+    } else if (msg?.type === "requestBook") {
+        requestBook(conn);
     } else if (msg?.type === "responseBook") {
+        db.setBorrowedBook(msg.info.book.isbn).catch(console.error);
         db.logRequest(msg.info.origin, msg.info.book.isbn).catch(console.error);
         fillInfoBook(book);
     }
@@ -133,6 +154,7 @@ function handleIncomingData(conn, data) {
 function initServer() {
     // handle sockets
     fs.readFile('./server/serverList.json', 'utf-8', (err, data) => {
+        let getGlobalStatus = true;
         if (err) {
             return console.error(err);
         }
@@ -147,6 +169,12 @@ function initServer() {
             socket.connect(peer, () => {
                 console.log(`connected to peer ${peerInfo}`);
                 peers.push(socket);
+                if (getGlobalStatus) {
+                    socket.write(JSON.stringify({
+                        type: "requestGlobalStatus"
+                    }));
+                    getGlobalStatus = false;
+                }
             });
             socket.on('data', (buf) => {
                 handleIncomingData(socket, buf);
@@ -160,6 +188,9 @@ function initServer() {
                 console.log(`disconnected from peer ${peerInfo}`);
             });
         });
+        if (getGlobalStatus) {
+            showAllAvailableBooks().catch(console.error);
+        }
 
         // create a TCP server for new peers to connect to
         if (!peerList.peers.some(peer => peer.host === serverInfo.host && peer.port === serverInfo.port)) {
@@ -181,7 +212,11 @@ function initServer() {
                     peers.splice(idx, 1);
                 }
             });
-            c.on('error', err => console.error(err));
+            c.on('error', err => {
+                if (err.code !== 'ECONNRESET') {
+                    console.error(err);
+                }
+            });
 
             peers.push(c);
         });
@@ -245,23 +280,6 @@ function fillInfoBook(value) {
     //Actualizar los libros a prestar
     showAllAvailableBooks();
 
-}
-
-function enableClientReset() {
-    connections.forEach(c => {
-        let resp = {
-            type: "enableReset",
-        };
-        c.write(JSON.stringify(resp));
-
-        c.on('data', (data) => {
-            let msg = JSON.parse(data.toString());
-            console.log(msg);
-            if (msg?.type === "reset") {
-                resetSession();
-            }
-        });
-    });
 }
 
 function resetSession() {
