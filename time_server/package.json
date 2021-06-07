@@ -1,0 +1,6 @@
+{
+    "name": "time_server",
+    "version": "0.1.0",
+    "description": "Servidor de tiempo",
+    "main": "mainTime.js"
+}

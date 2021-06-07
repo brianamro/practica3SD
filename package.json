@@ -5,7 +5,8 @@
   "scripts": {
     "start:server1": "electron server --port=5500 --uri=\"mongodb+srv://brian:pass@clusterrico.vre9s.mongodb.net/bookservice?retryWrites=true&w=majority\" --db=bookservice",
     "start:server2": "electron server --port=5502 --uri=\"mongodb+srv://brian:pass@clusterrico.vre9s.mongodb.net/bookserviceBackup?retryWrites=true&w=majority\" --db=bookserviceBackup",
-    "start:client": "electron client"
+    "start:client": "electron client",
+    "start:time": "electron time_server"
   },
   "license": "ISC",
   "dependencies": {
