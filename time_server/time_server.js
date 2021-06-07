@@ -2,14 +2,9 @@ const net = require('net');
 const { setTimeout } = require('timers');
 
 
-const server = net.createServer((c) => {
-    // 'connection' listener.
-    console.log('client connected');
-    c.on('end', () => {
-      console.log('client disconnected');
-    });
-    c.write('hello\r\n');
-    c.pipe(c);
+const server = net.createServer();
+server.on('connection', (client) => {
+  console.log ('Client ')
 });
   
 server.on('error', (err) => {
@@ -19,6 +14,8 @@ server.on('error', (err) => {
 server.listen(8124, () => {
     console.log('time server bound');
 });
+
+
 
 
 
