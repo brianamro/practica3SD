@@ -19,6 +19,8 @@ var peers = [];
 var server;
 var db;
 
+var time_responses = [];
+
 export default function main() {
     db = new Db(args.uri, args.db);
     initClock();
@@ -159,8 +161,12 @@ function handleIncomingData(conn, data) {
     } else if(msg?.type === "timerequest"){
         conn.write(JSON.stringify(thisClock));
         //TODOm send to all peers
+        sendToAllPeers({type: "timerequest"});
         // modificar los clientes
-    }
+    } else if(msg?.type === "timeresponse"){
+        console.log("Hora recibida");
+        console.log(JSON.stringify(msg));
+    }   
 }
 
 function initServer() {
