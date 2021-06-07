@@ -6,10 +6,13 @@ var internal_clock = new Clock();
 
 const mainLoop = velocity => {
     return setInterval(function () {
-        internal_clock.advance();
-        postMessage(internal_clock.time);
-    }, Math.floor(1000 * velocity));
+        internal_clock.advance(velocity);
+    }, 50);
 }
+
+setInterval(() => {
+    postMessage(internal_clock.time);
+}, 50);
 
 var name;
 
@@ -38,7 +41,7 @@ onmessage = function initState(e) {
     name = e.data.name;
 
     this.onmessage = (function execState() {
-        let velocity = 1.0;
+        let velocity = 50;
         let mlHandler = mainLoop(velocity);
         /*
         Function executed on received message.

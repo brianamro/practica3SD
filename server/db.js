@@ -23,7 +23,7 @@ export default class Db {
         }
     }
     async setBorrowedBook(isbn) {
-        return this.execQuery((db) => {
+        return this.execQuery(async db => {
             let libros = db.collection('libros');
             return await libros.updateOne(
                 { isbn: isbn },
@@ -33,7 +33,7 @@ export default class Db {
     }
 
     async setBooksBatch(books) {
-        return this.execQuery((db) => {
+        return this.execQuery(async db => {
             let bulk = db.collection('libros').initializeUnorderedBulkOp();
             for (let book of books) {
                 bulk.find({ isbn: book.isbn }).updateOne({ $set: { prestado: book.prestado } });
@@ -42,7 +42,7 @@ export default class Db {
         });
     }
     async getRandomBook() {
-        return this.execQuery((db) => {
+        return this.execQuery(async db => {
             let libros = db.collection('libros');
 
             let bookID = (await libros.aggregate([
@@ -61,25 +61,25 @@ export default class Db {
         });
     }
     async getBooks() {
-        return this.execQuery((db) => {
+        return this.execQuery(async db => {
             let books = db.collection('libros');
             return await books.find({}).toArray();
         });
     }
     async getAvailableBooks() {
-        return this.execQuery((db) => {
+        return this.execQuery(async db => {
             let books = db.collection('libros');
             return await books.find({ prestado: false }).toArray();
         });
     }
     async areAvailableBooks() {
-        return this.execQuery((db) => {
+        return this.execQuery(async db => {
             let books = db.collection('libros');
             return (await books.countDocuments({ prestado: false })) > 0;
         });
     }
     async resetBooks() {
-        return this.execQuery((db) => {
+        return this.execQuery(async db => {
             await client.connect();
             let books = db.collection('libros');
 
@@ -91,7 +91,7 @@ export default class Db {
     }
 
     async logRequest(ip, isbn) {
-        return this.execQuery((db) => {
+        return this.execQuery(async db => {
             let newLogin = {
                 ip: ip,
                 time: new Date(),
@@ -104,14 +104,14 @@ export default class Db {
     }
 
     async getLogs() {
-        return this.execQuery((db) => {
+        return this.execQuery(async db => {
             let logs = db.collection('log');
             return await logs.find({}).toArray();
         });
     }
 
     async logRequestBatch(reqs) {
-        return this.execQuery((db) => {
+        return this.execQuery(async db => {
             let logs = db.collection('libros');
 
             return await logs.insertMany(reqs, { ordered: true });
@@ -119,7 +119,7 @@ export default class Db {
     }
 
     async resetLogs() {
-        return this.execQuery((db) => {
+        return this.execQuery(async db => {
             let logs = db.collection('log');
             return await logs.deleteMany({});
         });

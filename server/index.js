@@ -20,7 +20,6 @@ var db;
 
 export default function main() {
     db = new Db(args.uri, args.db);
-
     initClock();
     initServer();
     initComponents();
